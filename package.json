@@ -1,0 +1,48 @@
+{
+  "name": "planning-poker-app",
+  "version": "1.0.0",
+  "description": "planning pocker app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dischain/planning-poker-app.git"
+  },
+  "keywords": [
+    "planning poker",
+    "react",
+    "node.js"
+  ],
+  "author": "dischain",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.2",
+    "connect-redis": "^3.3.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "mysql": "^2.14.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "redis": "^2.8.0",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "eslint": "^4.5.0",
+    "eslint-plugin-react": "^7.3.0",
+    "mocha": "^3.5.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Dischain/planning-poker-app/issues"
+  },
+  "homepage": "https://github.com/Dischain/planning-poker-app#readme"
+}

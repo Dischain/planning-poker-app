@@ -1,0 +1,4 @@
+/node_modules
+/.vscode
+/client/public/bundle.js
+npm-debug.log
