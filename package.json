@@ -4,7 +4,7 @@
   "description": "planning pocker app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-server": "mocha --reporter spec ./server/test --recursive"
   },
   "repository": {
     "type": "git",
