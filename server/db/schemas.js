@@ -36,10 +36,10 @@ exports.create =  [
     + 'id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, '
     + 'votation_id INT UNSIGNED NOT NULL, ' 
     + 'creator_id INT UNSIGNED NOT NULL, '
-    + 'value ENUM ("1/2", "1", "2", "5", "8", "13", "20", "40", "100", "?", "inf"), '
+    + 'value ENUM ("1/2", "1", "2", "5", "8", "13", "20", "40", "100", "?", "inf") DEFAULT "?", '
     + 'INDEX (votation_id, creator_id), '
     + 'FOREIGN KEY (creator_id) REFERENCES users(id), '
     + 'FOREIGN KEY (votation_id) REFERENCES votations(id) ON DELETE CASCADE'
-    + ')'
+    + ');'
   }
 ];
