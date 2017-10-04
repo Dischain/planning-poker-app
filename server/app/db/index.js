@@ -48,7 +48,7 @@ exports.init = () => {
     if (!state.pool) return reject(new Error('Missing database connection'));
 
     Promise.all(tablesSchemas.create.map((schema) => {
-      return _createTable(schema);
+      return _createTable(schema.query);
     })).then(() => resolve());
   });
 };
@@ -104,21 +104,16 @@ function _createTable(query) {
   });
 }
 
-exports.init().then(() => { 
-  console.log('initialized'); 
-
-  exports.getConnection()
-  .then((connection) => {
-    connection.query('insert into test_table (first_name, last_name) values ("a", "b")', (err, result) => {
-      console.log(result);
-
-      connection.query('select * from test_table', (err, result) => {
-        console.log(result[0].id);
-        connection.release();
-
-        exports.closeConnection().then(() => { console.log('pool closed'); });
-      }); 
-    });   
-  })
-  .catch(console.log);
-});
+// const users = require('../model/users');
+// exports.init().then(() => { 
+//   users.create({
+//     name: 'user',
+//     email: 'user@email.com',
+//     password: 'password'
+//   })
+//   .then(console.log)
+//   .catch((err) => {
+//     console.log('probably there');
+//     console.log(err);
+//   });
+// });
