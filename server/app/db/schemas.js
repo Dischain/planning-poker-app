@@ -12,8 +12,9 @@ exports.create =  [
     + 'avatar BLOB DEFAULT NULL, '
     + 'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, '
     + 'UNIQUE INDEX (email), '
+    + 'FULLTEXT (name), '
     + 'INDEX (password)'
-    + ');'
+    + ') Engine = MyISAM CHARSET=utf8;'
   },
   {
     name: 'votations',
@@ -27,19 +28,19 @@ exports.create =  [
     + 'FULLTEXT (title, description), '
     + 'FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE, '
     + 'INDEX (creator_id)'
-    + ');'
+    + ') Engine = MyISAM CHARSET=utf8;'
   },
-  // {
-  //   name: 'votes',
-  //   query:
-  //     'CREATE TABLE IF NOT EXISTS votes ('
-  //   + 'id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, '
-  //   + 'votation_id INT UNSIGNED NOT NULL, ' 
-  //   + 'creator_id INT UNSIGNED NOT NULL, '
-  //   + 'value ENUM ("1/2", "1", "2", "5", "8", "13", "20", "40", "100", "?", "inf") DEFAULT "?", '
-  //   + 'INDEX (votation_id, creator_id), '
-  //   + 'FOREIGN KEY (creator_id) REFERENCES users(id), '
-  //   + 'FOREIGN KEY (votation_id) REFERENCES votations(id) ON DELETE CASCADE'
-  //   + ');'
-  // }
+  {
+    name: 'votes',
+    query:
+      'CREATE TABLE IF NOT EXISTS votes ('
+    + 'id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, '
+    + 'votation_id INT UNSIGNED NOT NULL, ' 
+    + 'creator_id INT UNSIGNED NOT NULL, '
+    + 'value ENUM ("1/2", "1", "2", "5", "8", "13", "20", "40", "100", "?", "inf") DEFAULT "?", '
+    + 'INDEX (votation_id, creator_id), '
+    + 'FOREIGN KEY (creator_id) REFERENCES users(id), '
+    + 'FOREIGN KEY (votation_id) REFERENCES votations(id) ON DELETE CASCADE'
+    + ') Engine = MyISAM CHARSET=utf8;'
+  }
 ];
