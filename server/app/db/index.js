@@ -47,6 +47,7 @@ exports.init = () => {
 
     if (!state.pool) return reject(new Error('Missing database connection'));
 
+    // create it serially
     Promise.all(tablesSchemas.create.map((schema) => {
       return _createTable(schema.query);
     })).then(() => resolve());
