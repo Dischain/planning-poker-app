@@ -101,11 +101,36 @@ describe('users model', () => {
 
       Promise.all(userPromises).then(() => {
         users.query(userConstants.FIND_USERS_LIMITED_FROM_OFFSET, {
-          name: 'user',
+          name: '2user2',
           limit: '1',
           offset: '0'
         }).then((result) => {
-          console.log(result);
+          expect(result[0].name).to.equal('2user2');
+          done();
+        });
+      });
+    });
+  });
+
+  describe('FIND_USERS_REGEX_LIMITED_FROM_OFFSET', () => {
+    it('should find user by name using regex', (done) => {
+      let userPromises = [];
+      
+      for (let i = 0; i <= 100; i++) {
+        userPromises.push(users.query(userConstants.CREATE_USER, {
+          name: i + userData.name + i,
+          email: userData.email + i,
+          password: userData.password
+        }));
+      }
+
+      Promise.all(userPromises).then(() => {
+        users.query(userConstants.FIND_USERS_REGEX_LIMITED_FROM_OFFSET, {
+          name: 'user',
+          limit: '11',
+          offset: '0'
+        }).then((result) => {
+          expect(result.length).to.equal(11);
           done();
         });
       });
@@ -153,10 +178,11 @@ describe('users model', () => {
   describe('DROP_TABLE', () => {
     it('should drop table', (done) => {
       users.query(userConstants.DROP_TABLE)
-      .then(() => users.query(userConstants.GET_ALL))
-      .then((result) => { 
-        expect(result.length).to.equal(0);
-        done();
+      .then(() => {        
+        users.query(userConstants.GET_ALL).catch((err) => {
+          expect(err.message).to.contains('ER_NO_SUCH_TABLE');
+          done();
+        });
       });
     });
   });
