@@ -22,12 +22,17 @@ module.exports = (query, data) => {
     case constants.FIND_USERS_LIMITED_FROM_OFFSET:
       return 'SELECT * FROM users WHERE MATCH (name) AGAINST (' + data.name + 'IN BOOLEAN MODE) '                 
             + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
+    case constants.FIND_USERS_REGEX_LIMITED_FROM_OFFSET:{
+      let escapedStr = 'SELECT * FROM users WHERE name LiKE "%' + data.name + '%" '
+                     + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
+      return escapedStr.replace(/'/g, '');
+    }
     case constants.DELETE_USER_BY_ID:
       return 'DELETE FROM users WHERE id = ' + data.id + ';';
     case constants.CLEAR_TABLE:
       return 'DELETE FROM users';
     case constants.DROP_TABLE:
-      return 'DELETE FROM users';
+      return 'DROP TABLE IF EXISTS users';
     default:
       return '';
   }  
