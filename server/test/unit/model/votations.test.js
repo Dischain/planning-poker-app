@@ -6,8 +6,10 @@ const chai = require('chai')
     , modelNames = require('../../../app/model').modelNames
     , users = require('../../../app/model').getModel(modelNames.USERS_MODEL)
     , votations = require('../../../app/model').getModel(modelNames.VOTATIONS_MODEL)
+    , votes = require('../../../app/model').getModel(modelNames.VOTES_MODEL)
     , userConstants = require('../../../app/model/users').constants
     , votationConstants = require('../../../app/model/votations').constants
+    , votesConstants = require('../../../app/model/votes').constants
     , expect = chai.expect;
 
 describe('votations model', () => {
@@ -165,22 +167,82 @@ describe('votations model', () => {
         offset: 1
       })
       .then((result) => {
-        console.log(userId);
-        console.log(result);
-        expect(result[0].title).to.equal('this is my second vottn');
-        expect(result[1].title).to.equal('should we stop creating spagetti code?');
+        expect(result.length).to.equal(2);
         done();
       });
     });
   });
 
   describe('DELETE_VOTATION_BY_ID', () => {
-    it('should delete votation by it id', () => {
-
+    it('should delete votation by id', (done) => {
+      let storedId;
+      votations.query(votationConstants.CREATE_VOTATION, votationData)
+      .then((result) => {
+        storedId = result.insertId;
+        return Promise.resolve(); 
+      })
+      .then(() => 
+        votations.query(votationConstants.DELETE_VOTATION_BY_ID, {id: storedId}))
+      .then(() => votations.query(votationConstants.GET_VOTATION_BY_ID, {id: storedId}))
+      .then((result) => {
+        expect(result.length).to.equal(0);
+        done();
+      });
     });
 
-    it('should delete votation by it id and all corresponding votes', () => {
+    it('should delete votation by id and all corresponding votes', (done) => {
+      let 
+      votationId,
+      voteData = {
+        value: '8'
+      };
 
+      votations.query(votationConstants.CREATE_VOTATION, votationData)
+      .then((result) => {
+        votationId = result.insertId;
+        voteData.votation_id = votationId;
+        voteData.creator_id = userId;
+        return Promise.resolve(); 
+      })
+      .then(() => votes.query(votesConstants.CREATE_VOTE, voteData))
+      .then(() => votations.query(votationConstants.DELETE_VOTATION_BY_ID, {id: votationId}))
+      .then(() => votes.query(votesConstants.GET_VOTES_BY_VOTATION_ID, {votation_id: votationId}))
+      .then((result) => {
+        expect(result.length).to.equal(0);
+        done();
+      });
     });
-  })
+  });
+
+  describe('CLEAR_TABLE', () => {
+    beforeEach((done) => {
+      votationsSet.forEach((votation) => votation.creator_id = userId );
+
+      Promise.all(votationsSet.map((votation) => 
+        votations.query(votationConstants.CREATE_VOTATION, votation)
+      ))
+      .then(() => done());
+    });
+
+    it('should clear table', (done) => {
+      votations.query(votationConstants.CLEAR_TABLE)
+      .then(() => votations.query(votationConstants.GET_ALL))
+      .then((result) => {
+        expect(result.length).to.equal(0);
+        done();
+      });
+    });
+  });
+
+  describe('DROP_TABLE', () => {
+    it('should drop table', (done) => {
+      votations.query(votationConstants.DROP_TABLE)
+      .then(() => {        
+        votations.query(votationConstants.GET_ALL).catch((err) => {
+          expect(err.message).to.contains('ER_NO_SUCH_TABLE');
+          done();
+        });
+      });
+    });
+  });
 });
