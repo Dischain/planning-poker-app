@@ -17,7 +17,6 @@ describe('users model', () => {
 
   before((done) => {
     db.init()
-    //.then(() => users.dropTable())
     .then(() => done());
   });
 
