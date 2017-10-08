@@ -3,9 +3,9 @@
 const escape = require('mysql').escape
     , isPlainObject = require('lodash.isplainobject')
     , db = require('../db')
-    , usersQueryFactory     = require('./users/factory.js');
-   // , votationsQueryFactory = require('./votations/factory.js')
-   // , votesQueryFactory     = require('./votes/factory.js');
+    , usersQueryFactory     = require('./users/factory.js')
+    , votationsQueryFactory = require('./votations/factory.js')
+    , votesQueryFactory     = require('./votes/factory.js');
 
 exports.modelNames = {
   USERS_MODEL: 'users',
