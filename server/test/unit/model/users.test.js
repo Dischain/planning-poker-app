@@ -174,6 +174,48 @@ describe('users model', () => {
     });
   });
 
+  describe('simple authentication', () => {
+    let credentials = {
+      name: 'vasya',
+      email: 'nagibator99@mail.ru',
+      password: 'password'
+    };
+    let userId;
+    
+    describe('register', () => {
+      it('should register new user and hash password', (done) => {
+        users.register(credentials)
+        .then((result) => users.query(userConstants.GET_USER_BY_ID, {id: result.insertId}))
+        .then((user) => {
+            expect(user[0].name).to.equal(credentials.name);
+            expect(user[0].email).to.equal(credentials.email);
+            expect(user[0].password).to.not.equal(credentials.password);
+            done();
+        });    
+      });
+    });
+
+    describe('validatePassword', () => {
+      it('should return false on invalid password', (done) => {
+        users.register(credentials)
+        .then(() => users.validatePassword(credentials, 'blah'))
+        .then((match) => {
+          expect(match).to.equal(false);
+          done();
+        });
+      });
+
+      it('should return true on valid password', (done) => {
+        users.register(credentials)
+        .then(() => users.validatePassword(credentials, 'password'))
+        .then((match) => {
+          expect(match).to.equal(true);
+          done();
+        });
+      });
+    });
+  });
+
   describe('DROP_TABLE', () => {
     it('should drop table', (done) => {
       users.query(userConstants.DROP_TABLE)
