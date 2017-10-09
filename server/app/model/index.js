@@ -5,7 +5,10 @@ const escape = require('mysql').escape
     , db = require('../db')
     , usersQueryFactory     = require('./users/factory.js')
     , votationsQueryFactory = require('./votations/factory.js')
-    , votesQueryFactory     = require('./votes/factory.js');
+    , votesQueryFactory     = require('./votes/factory.js')
+
+    , constants = require('../constants')
+    , bcrypt = require('bcrypt-nodejs');
 
 exports.modelNames = {
   USERS_MODEL: 'users',
@@ -16,52 +19,88 @@ exports.modelNames = {
 exports.getModel = (modelName) => { 
   let factory = _mapModelNameToFactory(modelName);
 
-  return {
-    query: (query, rawData, middleware) => { 
-      let escapedData;
-      const args = arguments;
+  let model = {};
 
-      if (rawData !== undefined) {
-        if (isPlainObject(rawData)) {
-          escapedData = Object.keys(rawData).reduce((init, key) => {
-            if (key === 'limit' || key === 'offset') // dirty hack
-              init[key] = rawData[key];
-            else
-              init[key] = escape(rawData[key]);              
+  model.query = (query, rawData) => { 
+    let escapedData;
+    const args = arguments;
 
-            return init;
-          }, {});
-        } else {
-          escapedData = escape(rawData);
-        }
+    if (rawData !== undefined) {
+      if (isPlainObject(rawData)) {
+        escapedData = Object.keys(rawData).reduce((init, key) => {
+          if (key === 'limit' || key === 'offset') // dirty hack
+            init[key] = rawData[key];
+          else
+            init[key] = escape(rawData[key]);              
+
+          return init;
+        }, {});
+      } else {
+        escapedData = escape(rawData);
       }
+    }
 
-      return new Promise((resolve, reject) => {
-        db.getConnection().then((con) => {
-          con.query(factory(query, escapedData), (err, result) => {
-            if (err) {
-              con.release();
-              return reject(err);
-            }
-
-            if (middleware !== undefined) {
-              middleware = (typeof middleware === 'function') ? middleware : function() {};
-              
-              middleware(escapedData).then((err, result) => {
-                  if (err) {
-                    con.release();
-                    return reject(err);
-                  }
-              });
-            } 
-            
+    return new Promise((resolve, reject) => {
+      db.getConnection().then((con) => {
+        con.query(factory(query, escapedData), (err, result) => {
+          if (err) {
             con.release();
-            resolve(result);
+            return reject(err);
+          }
+          
+          con.release();
+          resolve(result);
+        });
+      });
+    });
+  };   
+
+  if (modelName === 'users') {
+    model.register = (userData) => {
+      if (userData.avatar === undefined)
+        userData.avatar = constants.DEfAULT_AVATAR_PATH;
+      
+      return new Promise((resolve, reject) => {
+         bcrypt.genSalt(constants.SALT_WORK_FACTOR, (err, salt) => {
+           if(err) return reject(err);
+  
+           bcrypt.hash(userData.password, salt, null, (err, hash) => {
+            if(err) return reject(err);
+
+            userData.password = hash;
+            
+            model.query('CREATE_USER', userData)
+            .then(resolve)
+            .catch(reject);
+           });
+         });
+      });
+    };
+
+    model.validatePassword = (credentials, password) => {
+      console.log(credentials);
+      return new Promise((resolve, reject) => {
+        model.query('GET_USER_BY_EMAIL', { email: credentials.email }) 
+        .then((user) => {
+          if (user.length === 0) return reject(new Error('invalid email'));
+
+          const hashPassword = user[0].password;
+          console.log(credentials);
+          console.log(credentials.password);
+          console.log(hashPassword.toString());
+          console.log(password);
+          bcrypt.compare(password, hashPassword.toString(), (err, match) => {
+            console.log(err); console.log(match);
+            if (err) return reject(new Error('invalid password'));
+
+            resolve(match);
           });
         });
       });
-    }   
-  };
+    };
+  }
+
+  return model;
 };
   
 function _mapModelNameToFactory(modelName) {
@@ -69,10 +108,10 @@ function _mapModelNameToFactory(modelName) {
 
   switch (modelName) {
     case modelNames.USERS_MODEL:
-        return usersQueryFactory;
+      return usersQueryFactory;
     case modelNames.VOTATIONS_MODEL:
-        return votationsQueryFactory;
+      return votationsQueryFactory;
     case modelNames.VOTES_MODEL:
-        return votesQueryFactory;
+      return votesQueryFactory;
   }
 }

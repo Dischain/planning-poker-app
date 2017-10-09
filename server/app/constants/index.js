@@ -5,5 +5,9 @@ module.exports = {
   WRITE: 'WRITE*',
 
   MODE_PRODUCTION: 'production',
-  MODE_DEVELOPMENT: 'development'
+  MODE_DEVELOPMENT: 'development',
+
+  DEfAULT_AVATAR_PATH: '/public/default_avatar.png',
+
+  SALT_WORK_FACTOR: 10
 };
