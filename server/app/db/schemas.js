@@ -9,7 +9,7 @@ exports.create =  [
     + 'name VARCHAR(20) NOT NULL, '
     + 'email VARCHAR(30) NOT NULL, '
     + 'password BINARY(60) NOT NULL, '
-    + 'avatar BLOB DEFAULT NULL, '
+    + 'avatar TEXT DEFAULT NULL, '
     + 'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, '
     + 'UNIQUE INDEX (email), '
     + 'FULLTEXT (name), '

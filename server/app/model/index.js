@@ -78,15 +78,13 @@ exports.getModel = (modelName) => {
     };
 
     model.validatePassword = (credentials, password) => {
-      console.log(credentials);
       return new Promise((resolve, reject) => {
         model.query('GET_USER_BY_EMAIL', { email: credentials.email }) 
         .then((user) => {
           if (user.length === 0) return reject(new Error('invalid email'));
 
           const hashPassword = user[0].password;
-          console.log(credentials);
-          console.log(credentials.password);
+
           console.log(hashPassword.toString());
           console.log(password);
           bcrypt.compare(password, hashPassword.toString(), (err, match) => {
