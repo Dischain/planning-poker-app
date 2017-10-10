@@ -180,7 +180,13 @@ describe('votations model', () => {
         limit: 10, offset: 0
       }))
       .then((res) => {
-        console.log(res);
+        expect(res.length).to.equal(4);
+        expect(res[0].title).to.equal(votationsSet[0].title);
+        expect(res[0].description).to.equal(votationsSet[0].description);
+        expect(res[0].userId).to.equal(userId);
+        expect(res[0].votationId).to.equal(votationId);
+        expect(res[0].name).to.equal(userData.name);
+        expect(res[0].value).to.equal(voteData.value);
         done();
       });
     });
@@ -233,6 +239,63 @@ describe('votations model', () => {
       })
       .then((result) => {
         expect(result.length).to.equal(2);
+        done();
+      });
+    });
+  });
+
+  describe('GET_USER_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET', () => {
+    let votationId, votationId2,
+        voteData = { value: '8' }, voteData2 = { value: '1' };
+
+    it('should get all user votations with corresponding votes and user data limited by offset', (done) => {
+      votations.query(votationConstants.CREATE_VOTATION, {
+        title: votationsSet[0].title,
+        description: votationsSet[0].description,
+        creator_id: userId
+      })
+      .then((result) => { 
+        votationId = result.insertId;
+        return Promise.resolve();
+      })
+      .then(() => 
+        votations.query(votationConstants.CREATE_VOTATION, {
+          title: votationsSet[1].title,
+          description: votationsSet[1].description,
+          creator_id: userId2
+        })
+      )
+      .then((result) => { 
+        votationId2 = result.insertId;
+        return Promise.resolve();
+      })
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData.value,
+        votation_id: votationId,
+        creator_id: userId
+      }))
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData2.value,
+        votation_id: votationId,
+        creator_id: userId2
+      }))
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData.value,
+        votation_id: votationId2,
+        creator_id: userId
+      }))
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData2.value,
+        votation_id: votationId2,
+        creator_id: userId2
+      }))
+      .then(() => votations.query(votationConstants.GET_USER_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
+        creatorId: userId, limit: 10, offset: 0
+      }))
+      .then((res) => {
+        expect(res.length).to.equal(2);
+        expect(res[0].creatorId).to.equal(userId);
+        expect(res[1].creatorId).to.equal(userId);
         done();
       });
     });
