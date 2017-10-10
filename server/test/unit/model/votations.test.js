@@ -17,9 +17,14 @@ describe('votations model', () => {
     name: 'user',
     email: 'user@email.com',
     password: 'password'
+  },
+  userData2 = {
+    name: 'user2',
+    email: 'user2@email.com',
+    password: 'password'
   };
 
-  let userId, votationData = {
+  let userId, userId2, votationData = {
     title: 'this is default votation',
     description: 'this is default votation description',
   };
@@ -55,6 +60,11 @@ describe('votations model', () => {
     .then(() => users.query(userConstants.CREATE_USER, userData))
     .then((result) => {      
       userId = votationData.creator_id = result.insertId;
+      return Promise.resolve(/*votationData*/);
+    })
+    .then(() => users.query(userConstants.CREATE_USER, userData2))
+    .then((result) => {      
+      userId2 = result.insertId;
       return Promise.resolve(/*votationData*/);
     })
     //.then((data)=> votations.query(votationConstants.CREATE_VOTATION, data))
@@ -117,6 +127,61 @@ describe('votations model', () => {
           expect(result.length).to.equal(5);
           done();
         });
+      });
+    });
+  });
+
+  describe('GET_ALL_WITH_VOTES_LIMITED_BY_OFFSET', () => {
+    let votationId, votationId2,
+        voteData = { value: '8' }, voteData2 = { value: '1' };
+
+    it('should get all votations with corresponding votes and user data limited by offset', (done) => {
+      votations.query(votationConstants.CREATE_VOTATION, {
+        title: votationsSet[0].title,
+        description: votationsSet[0].description,
+        creator_id: userId
+      })
+      .then((result) => { 
+        votationId = result.insertId;
+        return Promise.resolve();
+      })
+      .then(() => 
+        votations.query(votationConstants.CREATE_VOTATION, {
+          title: votationsSet[1].title,
+          description: votationsSet[1].description,
+          creator_id: userId2
+        })
+      )
+      .then((result) => { 
+        votationId2 = result.insertId;
+        return Promise.resolve();
+      })
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData.value,
+        votation_id: votationId,
+        creator_id: userId
+      }))
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData2.value,
+        votation_id: votationId,
+        creator_id: userId2
+      }))
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData.value,
+        votation_id: votationId2,
+        creator_id: userId
+      }))
+      .then(() => votes.query(votesConstants.CREATE_VOTE, {
+        value: voteData2.value,
+        votation_id: votationId2,
+        creator_id: userId2
+      }))
+      .then(() => votations.query(votationConstants.GET_ALL_WITH_VOTES_LIMITED_BY_OFFSET, {
+        limit: 10, offset: 0
+      }))
+      .then((res) => {
+        console.log(res);
+        done();
       });
     });
   });
