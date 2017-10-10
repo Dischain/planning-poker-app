@@ -66,10 +66,12 @@ exports.getModel = (modelName) => {
   
            bcrypt.hash(userData.password, salt, null, (err, hash) => {
             if(err) return reject(err);
-
-            userData.password = hash;
             
-            model.query('CREATE_USER', userData)
+            model.query('CREATE_USER', {
+              name: userData.name,
+              email: userData.email,
+              password: hash
+            })
             .then(resolve)
             .catch(reject);
            });
@@ -85,10 +87,7 @@ exports.getModel = (modelName) => {
 
           const hashPassword = user[0].password;
 
-          console.log(hashPassword.toString());
-          console.log(password);
           bcrypt.compare(password, hashPassword.toString(), (err, match) => {
-            console.log(err); console.log(match);
             if (err) return reject(new Error('invalid password'));
 
             resolve(match);

@@ -207,7 +207,7 @@ describe('users model', () => {
 
       it('should return true on valid password', (done) => {
         users.register(credentials)
-        .then(() => users.validatePassword(credentials, 'password'))
+        .then(() => users.validatePassword(credentials, credentials.password))
         .then((match) => {
           expect(match).to.equal(true);
           done();
