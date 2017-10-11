@@ -95,8 +95,16 @@ exports.getModel = (modelName) => {
         });
       });
     };
-  }
 
+    model.isAuthenticated = (req, res, next) => {
+      if (req.isAuthenticated()) {
+        next();
+      } else {
+        res.sendStatus(401);
+      }
+    };
+  }
+  
   return model;
 };
   
