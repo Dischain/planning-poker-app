@@ -14,16 +14,19 @@ module.exports = (query, data) => {
         + data.password + ');';
     }
     case constants.GET_ALL:
-      return 'SELECT * FROM users;';
+      return 'SELECT name, email, id FROM users;';
+    case constants.GET_ALL_LIMITED_WITH_OFFSET:
+      return 'SELECT name, email, id FROM users '
+           + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
     case constants.GET_USER_BY_ID:
-      return 'SELECT * from users WHERE id = ' + data.id + ';';
+      return 'SELECT name, email, id from users WHERE id = ' + data.id + ';';
     case constants.GET_USER_BY_EMAIL:
       return 'SELECT * from users WHERE email = ' + data.email + ';';
     case constants.FIND_USERS_LIMITED_FROM_OFFSET:
-      return 'SELECT * FROM users WHERE MATCH (name) AGAINST (' + data.name + 'IN BOOLEAN MODE) '                 
+      return 'SELECT name, email, id FROM users WHERE MATCH (name) AGAINST (' + data.name + 'IN BOOLEAN MODE) '                 
             + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
     case constants.FIND_USERS_REGEX_LIMITED_FROM_OFFSET:{
-      let escapedStr = 'SELECT * FROM users WHERE name LiKE "%' + data.name + '%" '
+      let escapedStr = 'SELECT name, email, id FROM users WHERE name LiKE "%' + data.name + '%" '
                      + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
       return escapedStr.replace(/'/g, '');
     }
