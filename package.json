@@ -4,7 +4,9 @@
   "description": "planning pocker app",
   "main": "index.js",
   "scripts": {
-    "test-server": "mocha --reporter spec ./server/test --recursive"
+    "test-server": "npm run test-server-unit && npm run test-server-integration",
+    "test-server-unit": "mocha --reporter spec ./server/test/unit --recursive",
+    "test-server-integration": "mocha --reporter spec ./server/test/integration --recursive"
   },
   "repository": {
     "type": "git",
