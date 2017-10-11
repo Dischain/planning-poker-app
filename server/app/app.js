@@ -6,11 +6,12 @@ const express_session = require('express-session');
 const redis   = require('redis');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-//const RedisStore = require('connect-redis')(express_session);
+const RedisStore = require('connect-redis')(express_session);
 
 const config = require('./config');
 const db = require('./db');
-//const passport = require('./auth');
+const passport = require('./auth');
+const userRouter = require('./routes/users.js');
 
 const app = express();
 const client  = redis.createClient();
@@ -28,31 +29,35 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express_session({
-  secret: config.session.secret,
+  secret: config.redis_session.secret,
   store: new RedisStore({ 
-    host: config.session.host, 
-    port: config.session.port, 
+    host: config.redis_session.host, 
+    port: config.redis_session.port, 
     client: client, 
-    ttl: config.session.ttl 
+    ttl: config.redis_session.ttl 
   }),
-  saveUninitialized: config.session.saveUninitialized,
-  resave: config.session.resave
+  saveUninitialized: config.redis_session.saveUninitialized,
+  resave: config.redis_session.resave
 }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', userRouter);
 
 app.use((req, res, next) => {
   res.status(404);
-  res.json({'msg': 'Not Found'});
+  res.json({'messsage': 'Not Found'});
 });
 
-db.init()
-.then(() => {
-  app.listen(config.app.potr, () => {
-    console.log('Listening on port ' + config.app.potr);
+app.listen(config.app.port, () => {
+  db.init()
+  .then(() => {
+    console.log('Listening on port ' + config.app.port);
+  })  
+  .catch((err) => {
+    console.log(err);
+    process.exit(1);
   });
-})
-.catch((err) => {
-  console.log(err);
-  process.exit(1);
 });
+
+module.exports = app;
