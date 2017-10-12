@@ -104,17 +104,3 @@ function _createTable(query) {
     });
   });
 }
-
-// const users = require('../model/users');
-// exports.init().then(() => { 
-//   users.create({
-//     name: 'user',
-//     email: 'user@email.com',
-//     password: 'password'
-//   })
-//   .then(console.log)
-//   .catch((err) => {
-//     console.log('probably there');
-//     console.log(err);
-//   });
-// });

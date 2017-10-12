@@ -16,7 +16,7 @@ exports.modelNames = {
   VOTES_MODEL: 'votes'
 };
 
-exports.getModel = (modelName) => { 
+exports.getModel = (modelName) => {
   let factory = _mapModelNameToFactory(modelName);
 
   let model = {};
@@ -41,7 +41,7 @@ exports.getModel = (modelName) => {
     }
 
     return new Promise((resolve, reject) => {
-      db.getConnection().then((con) => {
+      db.getConnection().then((con) => { 
         con.query(factory(query, escapedData), (err, result) => {
           if (err) {
             con.release();
@@ -70,6 +70,7 @@ exports.getModel = (modelName) => {
             model.query('CREATE_USER', {
               name: userData.name,
               email: userData.email,
+              avatar: userData.avatar,
               password: hash
             })
             .then(resolve)
@@ -79,7 +80,7 @@ exports.getModel = (modelName) => {
       });
     };
 
-    model.validatePassword = (credentials, password) => {
+    model.validatePassword = (credentials, password) => { 
       return new Promise((resolve, reject) => {
         model.query('GET_USER_BY_EMAIL', { email: credentials.email }) 
         .then((user) => {
@@ -108,7 +109,7 @@ exports.getModel = (modelName) => {
   return model;
 };
   
-function _mapModelNameToFactory(modelName) {
+function _mapModelNameToFactory(modelName) { 
   const modelNames = exports.modelNames;
 
   switch (modelName) {
