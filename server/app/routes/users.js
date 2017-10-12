@@ -16,30 +16,29 @@ router.post('/register', (req, res) => {
   .catch((err) => {
     if (err.message === constants.EMAIL_EXISTS)
       res.status(409).json(JSON.stringify({message: constants.EMAIL_EXISTS})); 
-    //else if// и т.д.
     else
       res.sendStatus(500);
   });
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-
+    if (err) return res.status(401).json(JSON.stringify(err.message));
+        
     if (user) {
       req.logIn(user, (err) => {
-        if (err) return next(err);
+        if (err) return res.status(401).json(JSON.stringify(err.message));
 
         let userData = {
           name: user.name,
           email: user.email,
+          avatar: user.avatar,
           userId: user.id
         };
 
         res.status(200).json(JSON.stringify(userData));
       });
     } else {
-
       res.sendStatus(401);
     }
   })(req, res, next);

@@ -1,3 +1,5 @@
+'use strict';
+
 const chai = require('chai')
     , chaiHttp = require('chai-http')
     , server = require('../../app/app.js')
@@ -103,6 +105,44 @@ describe('users routes', () => {
           expect(body.userId).to.equal(userId);
           done();
         });
+    });
+  });
+
+  describe('login', () => {
+    before((done) => {
+      users.query(userConstants.CLEAR_TABLE)
+      .then(() => users.register(userData))
+      .then(() => done());
+    });
+
+    it('should login user', (done) => {
+      chai.request(server)
+      .post('/login')
+      .send(userData)
+      .end((err, res) => { 
+        const body = JSON.parse(res.body);
+        expect(body).to.haveOwnProperty('userId');
+        res.should.have.status(200);        
+        done();
+      });
+    });
+
+    it('Should not login user with invalid email', () => {
+      chai.request(server)
+      .post('/login')
+      .send({ email: 'invalid', password: 'invalid'})
+      .end((err, res) => { 
+        res.should.have.status(401);
+      });
+    });
+
+    it('Should not login user with invalid password', () => {
+      chai.request(server)
+      .post('/login')
+      .send({ email: userData.email, password: 'invalid'})
+      .end((err, res) => { 
+        res.should.have.status(401);
+      });
     });
   });
 });
