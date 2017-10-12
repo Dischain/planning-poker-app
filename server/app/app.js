@@ -1,20 +1,21 @@
 'use strict';
 
-const express = require('express');
-const bodyParser  = require('body-parser');
-const express_session = require('express-session');
-const redis   = require('redis');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const RedisStore = require('connect-redis')(express_session);
+const express = require('express')
+    , bodyParser  = require('body-parser')
+    , express_session = require('express-session')
+    , redis   = require('redis')
+    , cors = require('cors')
+    , cookieParser = require('cookie-parser')
+    , RedisStore = require('connect-redis')(express_session)
 
-const config = require('./config');
-const db = require('./db');
-const passport = require('./auth');
-const userRouter = require('./routes/users.js');
+    , config = require('./config')
+    , db = require('./db')
+    , passport = require('./auth')
+    , userRouter = require('./routes/users.js')
+    , votationsRouter = require('./routes/votations.js')
 
-const app = express();
-const client  = redis.createClient();
+    , app = express()
+    , client  = redis.createClient();
 
 app.use(cors(config.app.corsOptions));
 app.use((req, res, next) => {
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(express_session({
   secret: config.redis_session.secret,
   store: new RedisStore({ 
@@ -39,10 +41,12 @@ app.use(express_session({
   saveUninitialized: config.redis_session.saveUninitialized,
   resave: config.redis_session.resave
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', userRouter);
+app.use('/', votationsRouter);
 
 app.use((req, res, next) => {
   res.status(404);
