@@ -29,8 +29,7 @@ module.exports = (query, data) => {
       return 'SELECT * FROM votations WHERE MATCH (title,description) AGAINST (' + data.text + ') '
            + ' ORDER BY created_at DESC '
            + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';  
-    case constants.FIND_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET: {
-      console.log(data);
+    case constants.FIND_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET: 
       return 'SELECT vtn.title, vtn.description, vtn.id votationId, vtn.creator_id creatorId, '
           + 'vtn.created_at createdAt, vt.value, u.name, u.id userId FROM '
           + 'votations vtn LEFT JOIN votes vt ON vtn.id = vt.votation_id '
@@ -38,7 +37,6 @@ module.exports = (query, data) => {
           + 'WHERE MATCH (vtn.title,vtn.description) AGAINST (' + data.text + ') '
           + 'ORDER BY vtn.created_at DESC '
           + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';'; 
-    } 
     case constants.GET_USER_VOTATIONS_LIMITED_FROM_OFFSET:
       return 'SELECT * FROM votations WHERE votations.creator_id = ' + data.creatorId
            + ' ORDER BY created_at DESC'

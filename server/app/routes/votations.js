@@ -69,12 +69,11 @@ router.get('/votations/:id', users.isAuthenticated, (req, res) => {
     .catch((err) => res.sendStatus(500));
 });
 
-router.get('/votations_search', users.isAuthenticated, (req, res) => { console.log(req.body);
+router.get('/votations_search', users.isAuthenticated, (req, res) => { 
   votations.query(votationsConstants.FIND_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
     text: req.body.text, limit: req.body.limit, offset: req.body.offset
   })
   .then((result) => {
-    console.log(result);
     let combinedVotations = _combineVotesByVotations(result);
     res.status(200).json(JSON.stringify(combinedVotations));
   })

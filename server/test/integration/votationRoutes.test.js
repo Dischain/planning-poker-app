@@ -191,6 +191,7 @@ describe('votation routes', () => {
 
       const agent = chai.request.agent(server);
       
+      // take in mind 50% rule...
       votations.query(votationConstants.CREATE_VOTATION, { 
         title: 'adasd', description: 'vvvv', creator_id: userId
       })
@@ -210,11 +211,14 @@ describe('votation routes', () => {
         .end((err, res) => {
           agent
           .get('/votations_search')
-          .send({ text: 'bit', limit: 10, offset: 0 })
+          .send({ text: 'uber', limit: 10, offset: 0 })
           .end((err, res) => {
-            //const body = JSON.parse(res.body);
-  
-            console.log(res.body);
+            const body = JSON.parse(res.body);
+
+            expect(body[0]).to.haveOwnProperty('votationData');
+            expect(body[0]).to.haveOwnProperty('votes');
+            expect(body[0].votationData.title).to.equal('my first votation');
+            expect(body[0].votationData.description).to.contain('uber');
             done();
           });
         });        
