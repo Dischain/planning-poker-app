@@ -23,11 +23,11 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    if (err) return res.status(401).json(JSON.stringify(err.message));
+    if (err) return res.status(400).json(JSON.stringify(info));
         
     if (user) {
       req.logIn(user, (err) => {
-        if (err) return res.status(401).json(JSON.stringify(err.message));
+        if (err) return res.status(400).json(JSON.stringify(info));
 
         let userData = {
           name: user.name,
@@ -39,7 +39,7 @@ router.post('/login', (req, res, next) => {
         res.status(200).json(JSON.stringify(userData));
       });
     } else {
-      res.sendStatus(401);
+      res.status(400).json(JSON.stringify(info));
     }
   })(req, res, next);
 });

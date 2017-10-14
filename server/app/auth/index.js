@@ -24,14 +24,14 @@ passport.use(new LocalStrategy({
   users.query(userConstants.GET_USER_BY_EMAIL, {email: email})
   .then((user) => {
     if (!user[0]) {
-      return done(null, false, { message: 'Incorrect email or password.' });
+      return done(null, false, { message: 'Incorrect email' });
     }
 
     users.validatePassword(user[0], password)
       .then((isMatch) => {
         isMatch ? 
           done(null, user[0]) : 
-          done(null, false, { message: 'Incorrect username or password'});
+          done(null, false, { message: 'Incorrect password'});
       })
       .catch(err => done(err));
   })

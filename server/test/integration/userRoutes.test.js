@@ -119,7 +119,7 @@ describe('users routes', () => {
       chai.request(server)
       .post('/login')
       .send(userData)
-      .end((err, res) => { 
+      .end((err, res) => {
         const body = JSON.parse(res.body);
         expect(body).to.haveOwnProperty('userId');
         res.should.have.status(200);        
@@ -127,21 +127,29 @@ describe('users routes', () => {
       });
     });
 
-    it('Should not login user with invalid email', () => {
+    it('Should not login user with invalid email', (done) => {
       chai.request(server)
       .post('/login')
       .send({ email: 'invalid', password: 'invalid'})
       .end((err, res) => { 
-        res.should.have.status(401);
+        const body = JSON.parse(res.body);
+
+        expect(body.message).to.equal('Incorrect email');
+        res.should.have.status(400);
+        done();
       });
     });
 
-    it('Should not login user with invalid password', () => {
+    it('Should not login user with invalid password', (done) => {
       chai.request(server)
       .post('/login')
       .send({ email: userData.email, password: 'invalid'})
-      .end((err, res) => { 
-        res.should.have.status(401);
+      .end((err, res) => {
+        const body = JSON.parse(res.body);
+
+        expect(body.message).to.equal('Incorrect password');
+        res.should.have.status(400);
+        done();
       });
     });
   });
