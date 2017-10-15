@@ -3,8 +3,8 @@
     "mysql": {
       "dbName": "pp_dev",
       "host": "localhost",
-      "user": "secret",
-      "password": "secret"
+      "user": "dischain",
+      "password": "sanoman11"
     },
     "redis_session": {
       "host": "localhost",

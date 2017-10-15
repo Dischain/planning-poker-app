@@ -1,0 +1,11 @@
+p {
+	color: rgb(34, 195, 195);
+}
+
+h1 {
+	color: red;
+}
+
+.left {
+	float: right;
+}

@@ -1,9 +1,19 @@
-'use strict';
-
-import 'file?name=[name].[ext]!../serviceworker.js';
-import 'file?name=[name].[ext]!../.htaccess';
-
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-ReactDOM.render(<div>Hello</div>, document.getElementById('app'));
+import Bla from './component.js';
+
+import '../css/main.css';
+
+class Test extends Component {
+  render() {
+    return (
+      <div>
+        <Bla/>
+        <p>Hello, bitches</p>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<Test/>, document.getElementById('app'));
