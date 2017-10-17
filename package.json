@@ -6,6 +6,7 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack --config webpack.config.js",
     "start-wds": "./node_modules/.bin/webpack-dev-server --config webpack.config.js --devtool eval --progress --hot --content-base app",
+    "start-server": "node ./server/app/app.js",
     "test-server": "npm run test-server-unit && npm run test-server-integration",
     "test-server-unit": "mocha --reporter spec ./server/test/unit --recursive",
     "test-server-integration": "mocha --reporter spec ./server/test/integration --recursive"
@@ -33,11 +34,14 @@
     "mysql": "^2.14.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "prop-types": "^15.6.0",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
     "react-redux": "^5.0.6",
+    "react-router": "3.0.0",
     "redis": "^2.8.0",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-core": "6.x",
