@@ -8,14 +8,15 @@ router.post('/register', (req, res) => {
   const credentials = {
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    avatar: req.body.avatar
   };
 
   users.register(credentials)
   .then((result) => res.status(201).json(JSON.stringify({userId: result.insertId})))
   .catch((err) => {
-    if (err.message === constants.EMAIL_EXISTS)
-      res.status(409).json(JSON.stringify({message: constants.EMAIL_EXISTS})); 
+    if (err.code === 'ER_DUP_ENTRY')
+      res.status(409).json(JSON.stringify({message: 'Email exists'})); 
     else
       res.sendStatus(500);
   });

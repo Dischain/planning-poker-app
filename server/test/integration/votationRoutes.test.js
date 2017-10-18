@@ -53,7 +53,7 @@ describe('votation routes', () => {
   });
 
   describe('post votation', () => {
-    it('shoul create new votation with all corresponding votes', (done) => {
+    it('should create new votation with all corresponding votes', (done) => {
       const agent = chai.request.agent(server);
 
       users.register(userData)

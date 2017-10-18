@@ -61,10 +61,10 @@ exports.getModel = (modelName) => {
         userData.avatar = constants.DEfAULT_AVATAR_PATH;
       
       return new Promise((resolve, reject) => {
-         bcrypt.genSalt(constants.SALT_WORK_FACTOR, (err, salt) => {
-           if(err) return reject(err);
+        bcrypt.genSalt(constants.SALT_WORK_FACTOR, (err, salt) => {
+          if(err) return reject(err);
   
-           bcrypt.hash(userData.password, salt, null, (err, hash) => {
+          bcrypt.hash(userData.password, salt, null, (err, hash) => {
             if(err) return reject(err);
             
             model.query('CREATE_USER', {
