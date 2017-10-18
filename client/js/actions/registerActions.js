@@ -9,20 +9,13 @@ import {
 } from '../constants/registerConstants.js';
 import commonErrors from '../constants/commonConstants.js';
 import { API_BASE_PATH } from '../../config.js';
+import { browserHistory } from 'react-router';
 
 export function register(userData) {
   return (dispatch, getState) => {
     dispatch(sendingRegisterRequest(true));
 
-    let { isRegisterFormValid } = getState();
-
-    _validateRegisterForm(userData, (valid, invalidFields) => {
-      if (!valid) {
-        dispatch(setRegisterFormErrorMessages(invalidFields));
-      }
-
-      isValid = valid;
-    });
+    let { isRegisterFormValid } = getState().registerReducer;
 
     if (!isRegisterFormValid) {
       dispatch(sendingRegisterRequest(false));
@@ -39,7 +32,12 @@ export function register(userData) {
       mode: 'cors',
       method: 'POST',
       credentials: 'include',
-      body: JSON.stringify({ email: email, password: password })
+      body: JSON.stringify({ 
+        name: userData.name,
+        email: userData.email, 
+        password: userData.password,
+        avatart: userData.avatart 
+      })
     })
     .then((res) => {
       _status = res.status;
@@ -47,7 +45,9 @@ export function register(userData) {
     })
     .then((json) => {
       let data = JSON.parse(json);
-      if (_status === 201) {
+
+      if (_status === 201) {        
+        dispatch(setRegisterError(''))
         browserHistory.push('/login');
       } else if (_status === 409) {
         dispatch(setRegisterError(data.message));
@@ -61,34 +61,6 @@ export function register(userData) {
       dispatch(sendingRegisterRequest(false));
     });
   }
-}
-
-function _validateRegisterForm(data, cb) {
-  const specificValidations = ['email'];
-  let invalidFields = [];
-
-  Object.keys(data).forEach((field) => {
-    if (data[field].length === 0)
-      invalidFields.push({ field: field, info: 'Empty field' });
-  });
-
-  if (data.email.match(/^[a-z0-9]+@[a-z]+\.[a-z]{2,4}$/i)) {
-    invalidFields.push({
-      field: 'email',
-      info: 'Bad email'
-    });
-  } 
-
-  if (data.password1.length !== 0 || data.password2.length !== 0) {
-    if (data.password1 !== data.password2) {
-      invalidFields.push({
-        field: 'password2',
-        info: 'Password does not match'
-      }); 
-    }
-  }
-
-  cb(invalidFields.length === 0, invalidFields);
 }
 
 export function sendingRegisterRequest(sending) {

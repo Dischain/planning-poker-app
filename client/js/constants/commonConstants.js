@@ -1,7 +1,5 @@
 'use strict';
 
-const commonConstants = {
+module.exports = {
   ERROR: 'An error occured'
-}
-
-export default commonConstants;
+};

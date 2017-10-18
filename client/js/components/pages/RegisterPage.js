@@ -6,12 +6,13 @@ import { connect } from 'react-redux';
 import ControlledInput from '../ControlledInput.js';
 import LoadingButton from '../LoadingButton.js';
 import { 
-  changeFrom,
+  register,
+  changeForm,
   setRegisterFormIsValid,
   setRegisterFormErrorMessages
 } from '../../actions/registerActions.js';
 
-const assign = Object.assign
+const assign = Object.assign;
 
 // TODO: avatar upload
 class RegisterPage extends Component {
@@ -32,10 +33,10 @@ class RegisterPage extends Component {
       <div className = 'form-page__wrapper'>        
         <div className='form-page__form-wrapper'>
           <div className='form-page__form-header'>
-            <h2 className='form-page__form-heading'>Login</h2>
+            <h2 className='form-page__form-heading'>Register</h2>
           </div>
 
-          <div className = 'form' onSubmit = {this._onSubmit}>
+          <form className = 'form' onSubmit = {this._onSubmit.bind(this)}>
             <ControlledInput formId = {'name'}
               fieldName = {'Name'}
               type = {'text'}
@@ -57,129 +58,143 @@ class RegisterPage extends Component {
               type = {'password'}
               value = {this.props.registerFormState.password1} 
               onChange = {this._onChangePassword1.bind(this)}
-              errorMessage = {this.props.registerFormErrorMessages.password2}
+              errorMessage = {this.props.registerFormErrorMessages.password1}
             />
             <ControlledInput formId = {'password2'}
               fieldName = {'Confirm Password'}
               type = {'password'}
-              value = {this.props.registerFormState.password1}
+              value = {this.props.registerFormState.password2}
               onChange = {this._onChangePassword2.bind(this)}
               errorMessage = {this.props.registerFormErrorMessages.password2}
             />
             <div className = 'form__submit-btn-wrapper'>
-
+              {submitBtn}
             </div>
-          </div>          
+          </form>          
           
           <div className='form-page__form-footer'>
-            <div className='form-page__form-error'></div>
+            <div className='form-page__form-error'>{this.props.registerError}</div>
           </div>
         </div>
       </div>
     );
   }
 
+  _onSubmit(event) {
+    event.preventDefault();
+
+    if (this.props.isRegisterFormValid) {
+      this.props.register({
+        name: this.props.registerFormState.name,
+        email: this.props.registerFormState.email,
+        password2: this.props.registerFormState.password2,
+        avatar: this.props.registerFormState.avatar
+      });
+    }
+  }
+
   _onChangeName(event) {
     let value = event.target.value;
-
-    let newState = assign(this.props.registerFormState, {
+    let newState = assign({}, this.props.registerFormState, {
       name: value
     });
+    let errorMsgs = assign({}, this.props.registerFormErrorMessages);
 
-    this.props.dispatch(changeFrom(newState));
+    this.props.dispatch(changeForm(newState));
 
     if (value.length === 0) {
-      this.props.dispatch(setRegisterFormIsValid(false));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'name', info: 'Empty field'
-      })));
+      errorMsgs.name = 'Empty field';
+      this.props.dispatch(setRegisterFormIsValid(false));      
     } else {
-      this.props.dispatch(setRegisterFormIsValid(true));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'name', info: ''
-      })));
+      errorMsgs.name = '';
+      this.props.dispatch(setRegisterFormIsValid(true));      
     }
+
+    this.props.dispatch(setRegisterFormErrorMessages(errorMsgs));
   }
 
   _onChangeEmail(event) {
     let value = event.target.value;
-
     let newState = assign(this.props.registerFormState, {
       email: value
     });
+    let errorMsgs = assign({}, this.props.registerFormErrorMessages);
 
-    if (value.match(/^[a-z0-9]+@[a-z]+\.[a-z]{2,4}$/i)) {
-      this.props.dispatch(setRegisterFormIsValid(false));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'email', info: 'Invalid email'
-      })));
+    this.props.dispatch(changeForm(newState));
+
+    if (!value.match(/^[a-z0-9]+@[a-z]+\.[a-z]{2,4}$/i)) {
+      errorMsgs.email = 'Invalid email';
+      this.props.dispatch(setRegisterFormIsValid(false));      
     } else {
+      errorMsgs.email = '';
       this.props.dispatch(setRegisterFormIsValid(true));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'email', info: ''
-      })));
     }
+
+    this.props.dispatch(setRegisterFormErrorMessages(errorMsgs));
   }
 
   _onChangePassword1(event) {
-    let value = event.target.value;
-    
+    let value = event.target.value;    
     let newState = assign(this.props.registerFormState, {
       password1: value
     });
+    let errorMsgs = assign({}, this.props.registerFormErrorMessages);
 
-    if (value !== this.props.registerFormState.password2
-    || (value === this.props.registerFormState.password2 === '')) {
+    this.props.dispatch(changeForm(newState));
+
+    if (value !== this.props.registerFormState.password2) {
+      errorMsgs.password1 = 'Passwords does not match';
       this.props.dispatch(setRegisterFormIsValid(false));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'password2', info: 'Passwords does not match'
-      })));
+    } else if (value === '') {
+      errorMsgs.password1 = 'Empty field';
+      this.props.dispatch(setRegisterFormIsValid(false));
     } else {
+      errorMsgs.password2 = errorMsgs.password1 = '';
       this.props.dispatch(setRegisterFormIsValid(true));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'password2', info: ''
-      })));
     }
+
+    this.props.dispatch(setRegisterFormErrorMessages(errorMsgs));    
   }
 
   _onChangePassword2(event) {
-    let value = event.target.value;
-    
+    let value = event.target.value;    
     let newState = assign(this.props.registerFormState, {
       password2: value
     });
+    let errorMsgs = assign({}, this.props.registerFormErrorMessages);
+    
+    this.props.dispatch(changeForm(newState));
 
-    if (value !== this.props.registerFormState.password1
-    || (value === this.props.registerFormState.password1 === '')) {
+    if (value !== this.props.registerFormState.password1) {
+      errorMsgs.password2 = 'Passwords does not match';
       this.props.dispatch(setRegisterFormIsValid(false));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'password2', info: 'Passwords does not match'
-      })));
+    } else if (value === '') {
+      errorMsgs.password2 = 'Empty field';
+      this.props.dispatch(setRegisterFormIsValid(false));
     } else {
+      errorMsgs.password2 = errorMsgs.password1 = '';
       this.props.dispatch(setRegisterFormIsValid(true));
-      this.props.dispatch(setRegisterFormErrorMessages(
-        assign(this.props.registerFormErrorMessages, {
-        field: 'password2', info: ''
-      })));
     }
+
+    this.props.dispatch(setRegisterFormErrorMessages(errorMsgs));    
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ registerReducer }) {
   return {
-    registerFormState: state.registerFormState,
-    sendingRegisterRequest: state.sendingRegisterRequest,
-    registerError: state.registerError,
-    isRegisterFormValid: state.isRegisterFormValid,    
-    registerFormErrorMessages: state.registerFormErrorMessages
+    registerFormState: registerReducer.registerFormState,
+    sendingRegisterRequest: registerReducer.sendingRegisterRequest,
+    registerError: registerReducer.registerError,
+    isRegisterFormValid: registerReducer.isRegisterFormValid,    
+    registerFormErrorMessages: registerReducer.registerFormErrorMessages
   };
 }
 
-export default connect(mapStateToProps)(RegisterPage);
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: func => dispatch(func),
+    register: userData => dispatch(register(userData))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);

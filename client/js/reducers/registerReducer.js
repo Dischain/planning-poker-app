@@ -24,6 +24,7 @@ const initialState = {
   registerFormErrorMessages: {
     name: '',
     email: '',
+    password1: '',
     password2: ''
   }
 };
@@ -37,22 +38,22 @@ export default function registerReducer(state = initialState, action) {
       break;
     case SENDING_REGISTER_REQUEST:
       return assign({}, state, {
-        sendingRegisterRequest: action.newState
+        sendingRegisterRequest: action.sending
       });
       break;
     case SET_REGISTER_FORM_ERROR_MESSAGES:
       return assign({}, state, {
-        registerFormErrorMessages: action.newState
+        registerFormErrorMessages: action.messages
       });
       break;
     case SET_REGISTER_FORM_VALID:
       return assign({}, state, {
-        isRegisterFormValid: action.newState
+        isRegisterFormValid: action.valid
       });
-      break;
+      break;    
     case SET_REGISTER_ERROR:
       return assign({}, state, {
-        registerError: action.newState
+        registerError: action.message
       });
     default:
       return state;
