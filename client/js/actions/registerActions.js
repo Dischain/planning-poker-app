@@ -35,8 +35,8 @@ export function register(userData) {
       body: JSON.stringify({ 
         name: userData.name,
         email: userData.email, 
-        password: userData.password,
-        avatart: userData.avatart 
+        password: userData.password2,
+        avatar: userData.avatar
       })
     })
     .then((res) => {

@@ -5,7 +5,7 @@ import {
   SENDING_LOGOUT_REQUEST,
   SET_LOGIN_ERROR,
   SET_LOGIN_FORM_VALID,
-  SET_LOGIN_FORM_ERROR_MESSAGE
+  SET_LOGIN_FORM_ERROR_MESSAGES
 } from '../constants/loginConstants.js';
 
 const assign = Object.assign;
@@ -17,9 +17,9 @@ const initialState = {
   },
   sendingLoginRequest: false,
   sendingLogoutRequest: false,
-  loginFormErrorMessage: {
-    field: '',
-    message: ''
+  loginFormErrorMessages: {
+    email: '',
+    password: ''
   },
   loginError: '',
   isLoginFormValid: false,
@@ -28,9 +28,9 @@ const initialState = {
 
 export default function loginReducer(state = initialState, action) {
   switch(action.type) {
-    case SET_AUTH: 
+    case SET_AUTH:
       return assign({}, state, {
-        loggedIn: action.newState
+        loggedIn: action.authState
       });
       break;
     case CHANGE_LOGIN_FORM:
@@ -40,27 +40,27 @@ export default function loginReducer(state = initialState, action) {
       break;
     case SENDING_LOGIN_REQUEST:
       return assign({}, state, {
-        sendingLoginRequest: action.newState
+        sendingLoginRequest: action.sending
       });
       break;
     case SENDING_LOGOUT_REQUEST:
       return assign({}, state, {
-        sendingLogoutRequest: action.newState
+        sendingLogoutRequest: action.sending
       });
       break;
-    case SET_LOGIN_FORM_ERROR_MESSAGE:
+    case SET_LOGIN_FORM_ERROR_MESSAGES:
       return assign({}, state, {
-        loginFormErrorMessage: action.newState
+        loginFormErrorMessages: action.message
       });
       break;
     case SET_LOGIN_FORM_VALID:
       return assign({}, state, {
-        isLoginFormValid: action.newState
+        isLoginFormValid: action.valid
       });
       break;
     case SET_LOGIN_ERROR:
       return assign({}, state, {
-        loginError: action.newState
+        loginError: action.message
       });
       break;
     default:
