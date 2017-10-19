@@ -17,11 +17,11 @@ export default function userReducer(state = initialState, action) {
   switch(action.type) {
     case SET_USER:
       return assign({}, state, {
-        userData: state.newState
+        userData: action.userData
       });
     case REMOVE_USER:
       return assign({}, state, {
-        userData: state.newState
+        userData: action.userData
       });
     default:
       return state;
