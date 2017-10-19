@@ -7,27 +7,20 @@ import {
   SENDING_LOGOUT_REQUEST,
   SET_LOGIN_ERROR,
   SET_LOGIN_FORM_VALID,
-  SET_LOGIN_FORM_ERROR_MESSAGE,  
+  SET_LOGIN_FORM_ERROR_MESSAGES,  
 } from '../constants/loginConstants.js';
 import commonErrors from '../constants/commonConstants.js';
 import { API_BASE_PATH } from '../../config.js';
-import { setUser, removeUser } from './userActions.js';
+import { storeUser, clearUser } from './userActions.js';
 import { browserHistory } from 'react-router';
 
 export function login({ email, password }) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(sendingLoginRequest(true));
 
-    let isValid;
-    _validateLoginForm({ email, password }, (valid, field, info) => {
-       if (!valid) {
-         dispatch(setLoginFormErrorMessage({ field, info }));
-       }
-       
-       isValid = valid;
-    });
+    let { isLoginFormValid } = getState().loginReducer;
 
-    if (!isValid) {
+    if (!isLoginFormValid) {
       dispatch(sendingLoginRequest(false));
       return;
     }
@@ -42,7 +35,7 @@ export function login({ email, password }) {
       mode: 'cors',
       method: 'POST',
       credentials: 'include',
-      body: JSON.stringify({ email: email, password: password })
+      body: JSON.stringify({ email, password })
     })
     .then((res) => {
       _status = res.status;
@@ -52,7 +45,7 @@ export function login({ email, password }) {
         let data = JSON.parse(json);
 
         if (_status === 200) {
-          dispatch(setUser(data));
+          dispatch(storeUser(data));
           dispatch(setAuthState(true));
           browserHistory.push('/dashboard');
           dispatch(changeForm({ email: '', email: '' }));
@@ -86,22 +79,13 @@ export function logout() {
       if (res.status === 200) {
         dispatch(sendingLogoutRequest(false));
         dispatch(setAuthState(false));
-        dispatch(removeUser());
+        dispatch(clearUser());
         browserHistory.replace(null, '/');
       } else {
         // ?
       }
     })
   }
-}
-
-function _validateLoginForm(data, cb) {
-  if (data.email === '')
-    return cb(false, 'email', 'Empty email');
-  else if (data.password === '')
-    return cb(false, 'password', 'Empty password');
-  else 
-    return cb(true);
 }
 
 export function sendingLoginRequest(sending) {
@@ -116,15 +100,15 @@ export function setAuthState(authState) {
   return { type: SET_AUTH, authState };
 }
 
-export function setLoginFormErrorMessage(message) {
-  return { type: SET_LOGIN_FORM_ERROR_MESSAGE, message };
+export function setLoginFormErrorMessages(message) {
+  return { type: SET_LOGIN_FORM_ERROR_MESSAGES, message };
 }
 
 export function setLoginError(message) {
   return { type: SET_LOGIN_ERROR, message };
 }
 
-export function setIsLoginFormValid(valid) {
+export function setLoginFormIsValid(valid) {
   return { type: SET_LOGIN_FORM_VALID, valid };
 }
 

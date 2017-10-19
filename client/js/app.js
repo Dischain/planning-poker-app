@@ -9,8 +9,10 @@ import Layout from './components/Layout.js';
 import LoginPage from './components/pages/LoginPage.js';
 import RegisterPage from './components/pages/RegisterPage.js';
 import Dashboard from './components/pages/Dashboard.js';
+import HomePage from './components/pages/HomePage.js';
 
 import rootReducer from './reducers/index.js';
+import { fetchUser } from './actions/userActions.js';
 
 import '../css/main.css';
 
@@ -18,7 +20,13 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
 const store = createStoreWithMiddleware(rootReducer);
 
 function checkAuth(nextState, replaceState) {
-
+  store.dispatch(fetchUser());
+  console.log(store.getState().userReducer);
+  if (store.getState().userReducer.userData.id === '') {
+    replaceState('/login');
+  } else {
+    replaceState(null, nextState.location.pathname);
+  }
 }
 
 // TODO: add NotFound and HomePage
@@ -26,10 +34,11 @@ ReactDOM.render(
   <Provider store = {store}>
     <Router history = {browserHistory}>
       <Route component = {Layout}>
+        <Route path = '/' component = {HomePage} />
+        <Route path = '/login' component = {LoginPage} />
+        <Route path = '/register' component = {RegisterPage} />          
         <Route onEnter = {checkAuth}>
-          <Route path = '/' component = {Dashboard} />
-          <Route path = '/login' component = {LoginPage} />
-          <Route path = '/register' component = {RegisterPage} />          
+          <Route path = '/dashboard' component = {Dashboard} />          
         </Route>
       </Route>
     </Router>
