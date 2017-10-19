@@ -101,9 +101,20 @@ exports.getModel = (modelName) => {
       if (req.isAuthenticated()) {
         next();
       } else {
-        res.sendStatus(401);
+        res.sendStatus(400);
       }
     };
+  } else if (modelName === 'votations') {
+    model.isAuthorized = (req, res, next) => {
+      const user = req.session.passport.user
+          , resourceId = req.params.id;
+      
+      model.query('GET_VOTATION_BY_ID', { id: resourceId })
+      .then((result) => {
+        if (result[0].creator_id !== user.id) return res.sendStatus(401);
+        return next();
+      })
+    }
   }
   
   return model;
