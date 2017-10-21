@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Nav from './Nav.js';
 import Footer from './Footer.js';
@@ -27,6 +28,11 @@ const mapStateToProps = (state) => {
   return {
     loggedIn: state.loggedIn
   };
+}
+
+Layout.prototypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  sendingLogoutRequest: PropTypes.bool.isRequired,
 }
 
 export default connect(mapStateToProps)(Layout);

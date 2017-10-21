@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class ControlledInput extends Component {
   render() {
@@ -21,4 +22,14 @@ export default class ControlledInput extends Component {
       </div>
     );
   }
+}
+
+ControlledInput.prototypes = {
+  formId: PropTypes.string.isRequired,
+  fieldName: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string
 }
