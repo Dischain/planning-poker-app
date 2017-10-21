@@ -1,12 +1,12 @@
 'use strict';
 
 import { SET_USER, REMOVE_USER } from '../constants/userConstants.js';
+import { setAuthState } from './loginActions.js';
 
 export function storeUser(userData) {
   return (dispatch) => {
     dispatch(setUser(userData));
-    console.log('user actions: store user');
-    console.log(userData)
+
     sessionStorage.setItem('user', JSON.stringify(userData));
   }
 }
@@ -23,7 +23,15 @@ export function clearUser() {
 
 export function fetchUser() {
   return (dispatch) => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    let user = JSON.parse(sessionStorage.getItem('user'));
+
+    if (user === null) {
+      user = { name: '', email: '', id: '', avatar: '' }
+    }
+
+    if (user.id !== '') {
+      dispatch(setAuthState(true));
+    }
 
     dispatch(setUser(user));
   }

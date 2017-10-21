@@ -21,15 +21,15 @@ const store = createStoreWithMiddleware(rootReducer);
 
 function checkAuth(nextState, replaceState) {
   store.dispatch(fetchUser());
-  console.log(store.getState().userReducer);
-  if (store.getState().userReducer.userData.id === '') {
+
+  if (!store.getState().loginReducer.loggedIn) {
     replaceState('/login');
   } else {
     replaceState(null, nextState.location.pathname);
   }
 }
 
-// TODO: add NotFound and HomePage
+// TODO: add NotFound
 ReactDOM.render(
   <Provider store = {store}>
     <Router history = {browserHistory}>
