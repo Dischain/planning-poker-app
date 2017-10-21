@@ -225,4 +225,70 @@ describe('votation routes', () => {
       });
     });
   });
+
+  describe('delete votation', () => {
+    it ('shoul delete votation by id', (done) => {
+      const agent = chai.request.agent(server);
+      let votationId;
+      agent
+      .post('/login')
+      .send(userData)
+      .end((err, res) => {
+        agent
+        .post('/votations')
+        .send({
+          votationData: {
+            title: votation.title,
+            description: votation.description,
+            creator_id: userId
+          },
+          votes : [
+            { value: '1', creator_id: userId },
+            { value: '2', creator_id: userId2 }
+          ]
+        })
+        .end((err, res) => {
+          votationId = JSON.parse(res.body).votationId;
+          agent
+          .delete('/votations/' + votationId)
+          .end((err, res) => {
+            res.should.have.status(201);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should not delete votation if not authorized', (done) => {
+      const agent = chai.request.agent(server);
+      let votationId;
+      agent
+      .post('/login')
+      .send(userData)
+      .end((err, res) => {
+        agent
+        .post('/votations')
+        .send({
+          votationData: {
+            title: votation.title,
+            description: votation.description,
+            creator_id: userId2
+          },
+          votes : [
+            { value: '1', creator_id: userId },
+            { value: '2', creator_id: userId2 }
+          ]
+        })
+        .end((err, res) => {
+          votationId = JSON.parse(res.body).votationId;
+          agent
+          .delete('/votations/' + votationId)
+          .end((err, res) => {
+            res.should.have.status(401);
+            done();
+          });
+        });
+      });
+    });
+  })
 });

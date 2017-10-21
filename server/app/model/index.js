@@ -106,12 +106,12 @@ exports.getModel = (modelName) => {
     };
   } else if (modelName === 'votations') {
     model.isAuthorized = (req, res, next) => {
-      const user = req.session.passport.user
+      const userId = req.session.passport.user
           , resourceId = req.params.id;
-      
+
       model.query('GET_VOTATION_BY_ID', { id: resourceId })
       .then((result) => {
-        if (result[0].creator_id !== user.id) return res.sendStatus(401);
+        if (result[0].creator_id !== userId) return res.sendStatus(401);
         return next();
       })
     }

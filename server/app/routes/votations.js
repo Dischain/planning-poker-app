@@ -91,7 +91,7 @@ router.get('/votations_by_user/:id', users.isAuthenticated, (req, res) => {
   .catch((err) => res.sendStatus(500));
 });
 
-router.delete('/votations/:id', users.isAuthenticated, (req,res) => {
+router.delete('/votations/:id', [ users.isAuthenticated, votations.isAuthorized ], (req,res) => {
   votations.query(votationsConstants.DELETE_VOTATION_BY_ID, { id: req.params.id })
   .then(() => res.sendStatus(201))
   .catch((err) => res.sendStatus(500));
