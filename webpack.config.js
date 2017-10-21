@@ -23,8 +23,20 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.css$/, include: path.resolve(__dirname, 'client/css'), loader: 'style-loader!css-loader' },
-      { test: /\.js[x]?$/, include: path.resolve(__dirname, 'client/js'), exclude: /node_modules/, loader: 'babel-loader' }
+      { 
+        test: /\.css$/, 
+        include: path.resolve(__dirname, 'client/css'), 
+        loaders: ['style-loader', 'css-loader', 'postcss-loader']
+      },
+      { 
+        test: /\.js[x]?$/, 
+        include: path.resolve(__dirname, 'client/js'), 
+        exclude: /node_modules/, loader: 'babel-loader' 
+      },
+      {
+        test: /\.jpe?g$|\.gif$|\.png$/i,
+        loader: "url-loader?limit=10000"
+      }
     ]
   },
   resolve: {
@@ -34,19 +46,36 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
     new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, 'client/index.html'), // Move the index.html file...
-        minify: { // Minifying it while it is parsed using the following, self–explanatory options
-          removeComments: true,
-          collapseWhitespace: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          keepClosingSlash: true,
-          minifyJS: true,
-          minifyCSS: true,
-          minifyURLs: true
-        }
+      template: path.resolve(__dirname, 'client/index.html'), 
+      minify: { 
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      }
+    })
+  ],
+  postcss: function() {
+    return [
+      require('postcss-import')({
+        onImport: function (files) {
+            files.forEach(this.addDependency); 
+        }.bind(this)
       }),
-  ]
+      require('postcss-simple-vars')(),
+      require('postcss-focus')(),
+      require('autoprefixer')({
+        browsers: ['last 2 versions', 'IE > 8'] 
+      }),
+      require('postcss-reporter')({
+        clearMessages: true
+      })
+    ];
+  }
 };
