@@ -66,13 +66,9 @@ export function login({ email, password }) {
 export function logout() {
   return (dispatch) => {
     dispatch(sendingLogoutRequest(true));
-    return fetch(API_BASE_PATH + '/logout', {
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
+    return fetch(API_BASE_PATH + '/logout', {      
       mode: 'cors',
-      method: 'POST',
+      method: 'GET',
       credentials: 'include',
     })
     .then((res) => {
@@ -80,7 +76,8 @@ export function logout() {
         dispatch(sendingLogoutRequest(false));
         dispatch(setAuthState(false));
         dispatch(clearUser());
-        browserHistory.replace(null, '/');
+
+        browserHistory.push('/');
       } else {
         // ?
       }

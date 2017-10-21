@@ -4,9 +4,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import LoadingButton from './LoadingButton.js';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { logout } from '../actions/loginActions';
 
-export default class Nav extends Component {
+class Nav extends Component {
   render() {
     const navBtns = this.props.loggedIn ? (
       <div>
@@ -36,7 +37,8 @@ export default class Nav extends Component {
     );
   }
 
-  _logout() {
+  _logout(event) {
+    event.preventDefault();
     this.props.logout();
   }
 }
@@ -57,5 +59,8 @@ function mapDispatchToProps(dispatch) {
 
 Nav.prototypes = {
   loggedIn: PropTypes.bool.isRequired,
-  sendingLogoutRequest: PropTypes.bool.isRequired
+  sendingLogoutRequest: PropTypes.bool.isRequired,
+  logout: PropTypes.func.isRequired
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
