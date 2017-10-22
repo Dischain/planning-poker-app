@@ -9,6 +9,7 @@ import {
 } from '../constants/registerConstants.js';
 import commonErrors from '../constants/commonConstants.js';
 import { API_BASE_PATH } from '../../config.js';
+import { setErrorMessage } from './commonActions.js';
 import { browserHistory } from 'react-router';
 
 export function register(userData) {
@@ -50,14 +51,14 @@ export function register(userData) {
         dispatch(setRegisterError(''))
         browserHistory.push('/login');
       } else if (_status === 409) {
-        dispatch(setRegisterError(data.message));
+        dispatch(setErrorMessage('register', data.message));
       } else {
-        dispatch(setRegisterError(commonErrors.ERROR));
+        dispatch(setErrorMessage('login', commonErrors.ERROR));
       }
       dispatch(sendingRegisterRequest(false));
     })
     .catch((err) => {
-      dispatch(setRegisterError(commonErrors.ERROR));
+      dispatch(setErrorMessage('login', commonErrors.ERROR));
       dispatch(sendingRegisterRequest(false));
     });
   }

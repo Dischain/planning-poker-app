@@ -12,6 +12,7 @@ import {
 import commonErrors from '../constants/commonConstants.js';
 import { API_BASE_PATH } from '../../config.js';
 import { storeUser, clearUser } from './userActions.js';
+import { setErrorMessage } from './commonActions.js';
 import { browserHistory } from 'react-router';
 
 export function login({ email, password }) {
@@ -50,14 +51,14 @@ export function login({ email, password }) {
           browserHistory.push('/dashboard');
           dispatch(changeForm({ email: '', email: '' }));
         } else if (_status === 400) {
-          dispatch(setLoginError(data.message));
+          dispatch(setErrorMessage('login', data.message));
         } else {
-          dispatch(setLoginError(commonErrors.ERROR));
+          dispatch(setErrorMessage('login', commonErrors.ERROR));
         }
         dispatch(sendingLoginRequest(false));
     })
     .catch((err) => {
-        dispatch(setLoginError(commonErrors.ERROR));
+        dispatch(setErrorMessage('login', commonErrors.ERROR));
         dispatch(sendingLoginRequest(false));
     });
   }
