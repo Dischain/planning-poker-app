@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import ControlledInput from '../ControlledInput.js';
 import LoadingButton from '../LoadingButton.js';
+import ErrorMessage from '../ErrorMessage.js';
 import {
   login,
   changeForm,
@@ -52,14 +53,13 @@ class LoginPage extends Component {
               onChange = {this._onChangePassword.bind(this)}
               errorMessage = {this.props.loginFormErrorMessages.password}
             />
+
+            <ErrorMessage errorMessage = {this.props.loginError} />
+
             <div className = 'form__submit-btn-wrapper'>
               {submitBtn}
             </div>
-          </form>          
-          
-          <div className='form-page__form-footer'>
-            <div className='form-page__form-error'>{this.props.loginError}</div>
-          </div>
+          </form>                
         </div>
       </div>
     );

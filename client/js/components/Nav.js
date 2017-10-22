@@ -11,7 +11,9 @@ class Nav extends Component {
   render() {
     const navBtns = this.props.loggedIn ? (
       <div>
-        <Link to='/dashboard' className='btn btn--dash btn--nav'>Dashboard</Link>
+        <Link to='/dashboard' className='btn btn--dash btn--nav'>
+          Dashboard
+        </Link>
         {this.props.sendingLogoutRequest ? (
           <LoadingButton className='btn--nav' btnText = {'Login'}/>
         ) : (

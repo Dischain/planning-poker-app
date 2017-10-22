@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import ControlledInput from '../ControlledInput.js';
 import LoadingButton from '../LoadingButton.js';
+import ErrorMessage from '../ErrorMessage.js';
 import { 
   register,
   changeForm,
@@ -67,14 +68,13 @@ class RegisterPage extends Component {
               onChange = {this._onChangePassword2.bind(this)}
               errorMessage = {this.props.registerFormErrorMessages.password2}
             />
+
+            <ErrorMessage errorMessage = {this.props.registerError} />
+
             <div className = 'form__submit-btn-wrapper'>
               {submitBtn}
             </div>
-          </form>          
-          
-          <div className='form-page__form-footer'>
-            <div className='form-page__form-error'>{this.props.registerError}</div>
-          </div>
+          </form>
         </div>
       </div>
     );
