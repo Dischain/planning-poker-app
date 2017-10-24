@@ -12,9 +12,19 @@ const redis = require('redis')
 
 const client = redis.createClient(port, host);
 
+function flush() {
+  return new Promise((resolve, reject) => {
+    client.flushdb((err) => {
+      if (err) return reject(err);
+      return resolve();
+    })
+  });
+}
+
 module.exports = ((connection) => {
   return {
     votationCache: votationCache(connection),
    // commonCache: commonCache(connection, expiration)
+   flush: flush
   }
 })(client);

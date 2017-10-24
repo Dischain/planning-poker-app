@@ -24,6 +24,16 @@ module.exports = (con) => {
       });  
     },
 
+    removeVotation: function(votationId, fields) {
+      const key = 'votation:' + votationId;
+      return new Promise((resolve, reject) => {
+        con.hdel(key, fields, (err, numDeleted) => {
+          if (err) return reject(err);
+          return resolve(numDeleted);
+        });
+      });
+    },
+
     /*                     Votes - Votations
     ***************************************************************/
     storeVote: function(voteData) {
@@ -46,6 +56,16 @@ module.exports = (con) => {
       });  
     },
 
+    removeVote: function(voteId, fields) {
+      const key = 'vote:' + voteId;
+      return new Promise((resolve, reject) => {
+        con.hdel(key, fields, (err, numDeleted) => {
+          if (err) return reject(err);
+          return resolve(numDeleted);
+        });
+      });
+    },
+
     storeVoteByVotation: function(votationId, voteId) {
       const key = 'votation:' + votationId + ':votes';
       return new Promise((resolve, reject) => {        
@@ -54,7 +74,7 @@ module.exports = (con) => {
           return resolve(res);
         });
       });
-    },
+    },    
 
     getVotesByVotation: function(votationId) {
       const key = 'votation:' + votationId + ':votes';
@@ -75,6 +95,16 @@ module.exports = (con) => {
           .then(() => {
             return resolve(votes);
           })          
+        });
+      });
+    },   
+    
+    removeVoteByVotation: function(votationId, voteId) {
+      const key = 'votation:' + votationId + ':votes';
+      return new Promise((resolve, reject) => {
+        con.srem(key, voteId, (err, numRemoved) => {
+          if (err) return reject(err);
+          return resolve(numRemoved);
         });
       });
     },
