@@ -15,6 +15,7 @@ const express = require('express')
     , votationsRouter = require('./routes/votations.js')
 
     , app = express()
+    , webSocketServer = require('./ws')(app)
     , client  = redis.createClient();
 
 app.use(cors(config.app.corsOptions));
@@ -53,15 +54,16 @@ app.use((req, res, next) => {
   res.json({'messsage': 'Not Found'});
 });
 
-app.listen(config.app.port, () => {
+//app.listen(config.app.port, () => {
   db.init()
   .then(() => {
+    webSocketServer.listen(config.app.port);
     console.log('Listening on port ' + config.app.port);
   })  
   .catch((err) => {
     console.log(err);
     process.exit(1);
   });
-});
+//}); 
 
 module.exports = app;
