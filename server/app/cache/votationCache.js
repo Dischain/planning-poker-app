@@ -37,7 +37,7 @@ module.exports = (con) => {
     /*                     Votes - Votations
     ***************************************************************/
     storeVote: function(voteData) {
-      const key = 'vote:' + voteData.id;
+      const key = 'vote:' + voteData.creatorId;
       return new Promise((resolve, reject) => {
         con.hmset(key, voteData, (err) => {
           if (err) return reject(err);
@@ -46,8 +46,8 @@ module.exports = (con) => {
       });      
     },
 
-    getVote: function(voteId) {
-      const key = 'vote:' + voteId;
+    getVote: function(creatorId) {
+      const key = 'vote:' + creatorId;
       return new Promise((resolve, reject) => {
         con.hgetall(key, (err, res) => {
           if (err) return reject(err);
@@ -56,8 +56,8 @@ module.exports = (con) => {
       });  
     },
 
-    removeVote: function(voteId, fields) {
-      const key = 'vote:' + voteId;
+    removeVote: function(creatorId, fields) {
+      const key = 'vote:' + creatorId;
       return new Promise((resolve, reject) => {
         con.hdel(key, fields, (err, numDeleted) => {
           if (err) return reject(err);
@@ -66,10 +66,10 @@ module.exports = (con) => {
       });
     },
 
-    storeVoteByVotation: function(votationId, voteId) {
+    storeVoteByVotation: function(votationId, creatorId) {
       const key = 'votation:' + votationId + ':votes';
       return new Promise((resolve, reject) => {        
-        con.sadd(key, voteId, (err, res) => {
+        con.sadd(key, creatorId, (err, res) => {
           if (err) return reject(err);
           return resolve(res);
         });
@@ -84,9 +84,9 @@ module.exports = (con) => {
           
           let votes = [];
 
-          res.reduce((init, voteId) => {
+          res.reduce((init, creatorId) => {
             return init.then(() => {
-              return this.getVote(voteId).then((res) => {
+              return this.getVote(creatorId).then((res) => {
                 votes.push(res);
                 return Promise.resolve();              
               });
@@ -99,12 +99,29 @@ module.exports = (con) => {
       });
     },   
     
-    removeVoteByVotation: function(votationId, voteId) {
+    removeVoteByVotation: function(votationId, creatorId) {
       const key = 'votation:' + votationId + ':votes';
       return new Promise((resolve, reject) => {
-        con.srem(key, voteId, (err, numRemoved) => {
+        con.srem(key, creatorId, (err, numRemoved) => {
           if (err) return reject(err);
           return resolve(numRemoved);
+        });
+      });
+    },
+
+    removeAllVotesByVotation: function(votationId) {
+      const key = 'votation:' + votationId + ':votes';
+      return new Promise((resolve, reject) => {
+        con.smembers(key, (err, res) => {
+          if (err) return reject(err);
+          
+          res.reduce((init, creatorId) => { 
+            return init.then(() => this.removeVote(creatorId, 
+              ['id', 'value', 'creatorId', 'votationId']));          
+          }, Promise.resolve())
+          .then(() => {
+            return resolve(res.length);
+          })          
         });
       });
     },
