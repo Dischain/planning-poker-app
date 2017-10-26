@@ -7,8 +7,8 @@ const vc = require('../../../app/cache').votationCache
 describe('votation cache', () => {
 
   const votation1 = { id: '1', title: 'test' }
-      , vote1 = { id: '1', value: '1/2', creator_id: '2', votaion_id: '1' }
-      , vote2 = { id: '2', value: '1', creator_id: '2', votaion_id: '1' }
+      , vote1 = { id: '1', value: '1/2', creatorId: '1', votaion_id: '1' }
+      , vote2 = { id: '2', value: '1', creatorId: '2', votaion_id: '1' }
       , fakeUser = { id: '1' };
 
   before((done) => {
@@ -56,7 +56,7 @@ describe('votation cache', () => {
     });
 
     it('should get vote by id', (done) => {
-      vc.getVote(vote1.id)
+      vc.getVote(vote1.creatorId)
       .then((res) => {
         expect(res).to.deep.eql(vote1);
         done();
@@ -64,7 +64,7 @@ describe('votation cache', () => {
     });
 
     it('should store vote by corresponding votation and resolve num stored', (done) => {      
-      vc.storeVoteByVotation(votation1.id, vote1.id)
+      vc.storeVoteByVotation(votation1.id, vote1.creatorId)
       .then((res) => {
         expect(res).to.be.equal(1);
         done();
@@ -79,18 +79,31 @@ describe('votation cache', () => {
       });
     });
 
-    it('should remove array of stored votes by votation id and resolve num deleted', (done) => {
-      vc.removeVoteByVotation(votation1.id, vote1.id)
+    it('should remove stored vote by votation id and it creator id '
+     + 'and resolve num deleted', (done) => {
+      vc.removeVoteByVotation(votation1.id, vote1.creatorId)
       .then((res) => {
         expect(res).to.be.equal(1);
         done();
       });
     });
 
-    it('should remove store vote by id and resolve num of deleted fields', (done) => {
-      vc.removeVote(1, Object.keys(vote1))
+    it('should remove vote by creator id and resolve num of '
+     + 'deleted fields', (done) => {
+      vc.removeVote(vote1.creatorId, Object.keys(vote1))
       .then((res) => {
         expect(res).to.be.equal(Object.keys(vote1).length);
+        done();
+      });
+    });
+
+    it('should remove all stored votes by votation id and resolve '
+     + 'num deleted', (done) => {
+      vc.storeVoteByVotation(votation1.id, vote1.creatorId)
+      .then(() => vc.storeVoteByVotation(votation1.id, vote2.creatorId))
+      .then(() => vc.removeAllVotesByVotation(votation1.id))
+      .then((res) => {
+        expect(res).to.be.equal(2);
         done();
       })
     });

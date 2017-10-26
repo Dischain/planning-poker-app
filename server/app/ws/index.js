@@ -46,8 +46,8 @@ const httpServer = require('http').Server
     });
   
     io.of('/votationRoom').on('connection', (socket) => {
-      socket.on('join', (votationId, userId) => {
-         // помещаем пользователя, зашедшего в данное голосование, в кеш
+      socket.on('join', ({ votationId, userId }) => {
+        console.log('triggered join');
         cache.storeUserByVotation(votationId, userId)
         .then(() => {
           // присоединяем его к комнате
@@ -59,10 +59,10 @@ const httpServer = require('http').Server
           });
         })
         // вытаскиваем всех пользователей, зашедших в эту комнату, из кеша
-        .then(() => getusersByVotation(votationId))
+        .then(() => cache.getUsersByVotation(votationId))
         // обновляем список участников голосования
         .then((users) => {
-          socket.to(votationId).emit('UPDATE_PARTICIPANTS', users)
+          socket.to(votationId).broadcast.emit('UPDATE_PARTICIPANTS', users)
         })
         .catch((err) => {
           if (err.message === 'VOTATION_NOT_EXISTS')
@@ -71,22 +71,26 @@ const httpServer = require('http').Server
       });
   
       socket.on('disconnect', (userId, votationId) => {
-        // удаляем из кеша пользователя с таким userId
+        console.log('server start triggering disconnect');
         cache.removeUserFromVotation(userId, votationId)
         .then(() => {
           // покидаем комнату с таким votationId
           return new Promise((resolve, reject) => {
             socket.leave(votationId, (err) => {
+              console.log('start leaving room...');
               if (err) return reject(err);
+              console.log('leaved successfully');
               resolve();
             });
           });
         })
         .then(() => {
           // оповещаем остальных, что usesrId их покинул
+          console.log(userId);
           socket.to(votationId).emit('REMOVE_USER', userId);
         })
         .catch((err) => {
+          console.log(err);
           socket.emit('VOTATION_DISCONNECTION_ERROR');
         });
       });
@@ -95,7 +99,7 @@ const httpServer = require('http').Server
         // высылаем голосование от имени создателя, с указанием инфо и id голосования
         // указанным в массиве users пользователям
         users.forEach((user) => {
-          socket.to(votationId).emit('INVITE_USER', { creatorId, votationId, title, description });
+          socket.emit('INVITE_USER', { creatorId, votationId, title, description });
         });
       });
   
@@ -111,12 +115,26 @@ const httpServer = require('http').Server
   
       socket.on('save_votation', (votationData) => {
         // вытаскивает временные значения голосов из redis
-        // ...
-        // и сохраняем готовое голосование с результатами в бд, затираем кеш
-        // ...
+        cache.getVotesByVotation(votationData.id)
+        .then((votes) => {
+        // и сохраняем готовое голосование с результатами в бд
+          return votesData.reduce((initial, vote) => {
+            vote.votation_id = votationData.id;
+            return initial.then(() => votes.query(votesConstants.CREATE_VOTE, vote));
+          }, Promise.resolve());
+        })
+        // затираем кеш
+        .then(() => cache.removeVotation(votationData.id, Object.keys(votationData)))
+        .then(() => cache.removeAllVotesByVotation(votationData.id)) // дописать
+        .then(() => cache.removeAllUserFromVotation(votationData.id)) // дописать
+        .then(() => {
         // закрываем комнату
-        socket.broadcast.to(votationId).emit('CLOSE_VOTATION');
-        // чистим кеш
+          socket.broadcast.to(votationId).emit('CLOSE_VOTATION');          
+        })
+        .catch((err) => {          
+          votations.query(votationsConstants.DELETE_VOTATION, votationData.id)
+          .then(() => socket.emit('VOTATION_SAVING_ERROR'));       
+        })
       });
     });
   }
