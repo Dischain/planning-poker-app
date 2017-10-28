@@ -156,6 +156,16 @@ module.exports = (con) => {
           return resolve(res);
         });
       });
+    },
+
+    removeAllUsersByVotation: function(votationId) {
+      const key = 'votation:' + votationId + ':users';
+      return new Promise((resolve, reject) => {
+        con.del(key, (err, res) => {
+          if (err) return reject(err);
+          return resolve(res);
+        });
+      });
     }
   };
 }
