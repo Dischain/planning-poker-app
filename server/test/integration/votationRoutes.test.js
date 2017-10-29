@@ -77,11 +77,11 @@ describe('votation routes', () => {
             votationData: {
               title: votation.title,
               description: votation.description,
-              creator_id: userId
+              creatorId: userId
             },
             votes : [
-              { value: '1', creator_id: userId },
-              { value: '2', creator_id: userId2 }
+              { value: '1', creatorId: userId },
+              { value: '2', creatorId: userId2 }
             ]
           })
           .end((err, res) => {            
@@ -111,11 +111,11 @@ describe('votation routes', () => {
           votationData: {
             title: votation2.title,
             description: votation2.description,
-            creator_id: userId2
+            creatorId: userId2
           },
           votes : [
-            { value: '1', creator_id: userId },
-            { value: '2', creator_id: userId2 }
+            { value: '1', creatorId: userId },
+            { value: '2', creatorId: userId2 }
           ]
         })
         .end((err, res) => {
@@ -193,16 +193,16 @@ describe('votation routes', () => {
       
       // take in mind 50% rule...
       votations.query(votationConstants.CREATE_VOTATION, { 
-        title: 'adasd', description: 'vvvv', creator_id: userId
+        title: 'adasd', description: 'vvvv', creatorId: userId
       })
       .then(() => votations.query(votationConstants.CREATE_VOTATION, { 
-        title: 'hjko', description: 'asss', creator_id: userId
+        title: 'hjko', description: 'asss', creatorId: userId
       }))
       .then(() => votations.query(votationConstants.CREATE_VOTATION, { 
-        title: 'hjko', description: 'asss', creator_id: userId
+        title: 'hjko', description: 'asss', creatorId: userId
       }))
       .then(() => votations.query(votationConstants.CREATE_VOTATION, { 
-        title: 'hjko', description: 'asss', creator_id: userId
+        title: 'hjko', description: 'asss', creatorId: userId
       }))
       .then(() => {
         agent
@@ -240,11 +240,11 @@ describe('votation routes', () => {
           votationData: {
             title: votation.title,
             description: votation.description,
-            creator_id: userId
+            creatorId: userId
           },
           votes : [
-            { value: '1', creator_id: userId },
-            { value: '2', creator_id: userId2 }
+            { value: '1', creatorId: userId },
+            { value: '2', creatorId: userId2 }
           ]
         })
         .end((err, res) => {
@@ -272,11 +272,11 @@ describe('votation routes', () => {
           votationData: {
             title: votation.title,
             description: votation.description,
-            creator_id: userId2
+            creatorId: userId2
           },
           votes : [
-            { value: '1', creator_id: userId },
-            { value: '2', creator_id: userId2 }
+            { value: '1', creatorId: userId },
+            { value: '2', creatorId: userId2 }
           ]
         })
         .end((err, res) => {

@@ -7,8 +7,8 @@ const vc = require('../../../app/cache').votationCache
 describe('votation cache', () => {
 
   const votation1 = { id: '1', title: 'test' }
-      , vote1 = { id: '1', value: '1/2', creatorId: '1', votaion_id: '1' }
-      , vote2 = { id: '2', value: '1', creatorId: '2', votaion_id: '1' }
+      , vote1 = { id: '1', value: '1/2', creatorId: '1', votaionId: '1' }
+      , vote2 = { id: '2', value: '1', creatorId: '2', votaionId: '1' }
       , fakeUser = { id: '1' };
 
   before((done) => {

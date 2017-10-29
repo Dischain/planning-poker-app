@@ -111,7 +111,7 @@ exports.getModel = (modelName) => {
 
       model.query('GET_VOTATION_BY_ID', { id: resourceId })
       .then((result) => {
-        if (result[0].creator_id !== userId) return res.sendStatus(401);
+        if (result[0].creatorId !== userId) return res.sendStatus(401);
         return next();
       })
     }

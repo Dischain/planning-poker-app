@@ -21,7 +21,7 @@ router.post('/votations', users.isAuthenticated, (req, res) => {
     votationId = result.insertId;
     
     return votesData.reduce((initial, vote) => {
-      vote.votation_id = votationId;
+      vote.votationId = votationId;
       return initial.then(() => votes.query(votesConstants.CREATE_VOTE, vote));
     }, Promise.resolve());
   })

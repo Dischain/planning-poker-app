@@ -59,7 +59,7 @@ describe('votations model', () => {
     .then(() => users.query(userConstants.CLEAR_TABLE))
     .then(() => users.query(userConstants.CREATE_USER, userData))
     .then((result) => {      
-      userId = votationData.creator_id = result.insertId;
+      userId = votationData.creatorId = result.insertId;
       return Promise.resolve(/*votationData*/);
     })
     .then(() => users.query(userConstants.CREATE_USER, userData2))
@@ -117,7 +117,7 @@ describe('votations model', () => {
         votationPromises.push(votations.query(votationConstants.CREATE_VOTATION, {
           title: votationData.title + i,
           description: votationData.description,
-          creator_id: votationData.creator_id
+          creatorId: votationData.creatorId
         }));
       }
 
@@ -139,7 +139,7 @@ describe('votations model', () => {
       votations.query(votationConstants.CREATE_VOTATION, {
         title: votationsSet[0].title,
         description: votationsSet[0].description,
-        creator_id: userId
+        creatorId: userId
       })
       .then((result) => { 
         votationId = result.insertId;
@@ -149,7 +149,7 @@ describe('votations model', () => {
         votations.query(votationConstants.CREATE_VOTATION, {
           title: votationsSet[1].title,
           description: votationsSet[1].description,
-          creator_id: userId2
+          creatorId: userId2
         })
       )
       .then((result) => { 
@@ -158,23 +158,23 @@ describe('votations model', () => {
       })
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData.value,
-        votation_id: votationId,
-        creator_id: userId
+        votationId: votationId,
+        creatorId: userId
       }))
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData2.value,
-        votation_id: votationId,
-        creator_id: userId2
+        votationId: votationId,
+        creatorId: userId2
       }))
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData.value,
-        votation_id: votationId2,
-        creator_id: userId
+        votationId: votationId2,
+        creatorId: userId
       }))
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData2.value,
-        votation_id: votationId2,
-        creator_id: userId2
+        votationId: votationId2,
+        creatorId: userId2
       }))
       .then(() => votations.query(votationConstants.GET_ALL_WITH_VOTES_LIMITED_BY_OFFSET, {
         limit: 10, offset: 0
@@ -194,7 +194,7 @@ describe('votations model', () => {
 
   describe('FIND_VOTATIONS_LIMITED_FROM_OFFSET', () => {
     beforeEach((done) => {
-      votationsSet.forEach((votation) => votation.creator_id = userId );
+      votationsSet.forEach((votation) => votation.creatorId = userId );
 
       Promise.all(votationsSet.map((votation) => 
         votations.query(votationConstants.CREATE_VOTATION, votation)
@@ -223,7 +223,7 @@ describe('votations model', () => {
 
   describe('GET_USER_VOTATIONS_LIMITED_FROM_OFFSET', () => {
     beforeEach((done) => {
-      votationsSet.forEach((votation) => votation.creator_id = userId );
+      votationsSet.forEach((votation) => votation.creatorId = userId );
 
       Promise.all(votationsSet.map((votation) => 
         votations.query(votationConstants.CREATE_VOTATION, votation)
@@ -252,7 +252,7 @@ describe('votations model', () => {
       votations.query(votationConstants.CREATE_VOTATION, {
         title: votationsSet[0].title,
         description: votationsSet[0].description,
-        creator_id: userId
+        creatorId: userId
       })
       .then((result) => { 
         votationId = result.insertId;
@@ -262,7 +262,7 @@ describe('votations model', () => {
         votations.query(votationConstants.CREATE_VOTATION, {
           title: votationsSet[1].title,
           description: votationsSet[1].description,
-          creator_id: userId2
+          creatorId: userId2
         })
       )
       .then((result) => { 
@@ -271,23 +271,23 @@ describe('votations model', () => {
       })
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData.value,
-        votation_id: votationId,
-        creator_id: userId
+        votationId: votationId,
+        creatorId: userId
       }))
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData2.value,
-        votation_id: votationId,
-        creator_id: userId2
+        votationId: votationId,
+        creatorId: userId2
       }))
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData.value,
-        votation_id: votationId2,
-        creator_id: userId
+        votationId: votationId2,
+        creatorId: userId
       }))
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: voteData2.value,
-        votation_id: votationId2,
-        creator_id: userId2
+        votationId: votationId2,
+        creatorId: userId2
       }))
       .then(() => votations.query(votationConstants.GET_USER_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
         creatorId: userId, limit: 10, offset: 0
@@ -328,13 +328,13 @@ describe('votations model', () => {
       votations.query(votationConstants.CREATE_VOTATION, votationData)
       .then((result) => {
         votationId = result.insertId;
-        voteData.votation_id = votationId;
-        voteData.creator_id = userId;
+        voteData.votationId = votationId;
+        voteData.creatorId = userId;
         return Promise.resolve(); 
       })
       .then(() => votes.query(votesConstants.CREATE_VOTE, voteData))
       .then(() => votations.query(votationConstants.DELETE_VOTATION_BY_ID, {id: votationId}))
-      .then(() => votes.query(votesConstants.GET_VOTES_BY_VOTATION_ID, {votation_id: votationId}))
+      .then(() => votes.query(votesConstants.GET_VOTES_BY_VOTATION_ID, {votationId: votationId}))
       .then((result) => {
         expect(result.length).to.equal(0);
         done();
@@ -344,7 +344,7 @@ describe('votations model', () => {
 
   describe('CLEAR_TABLE', () => {
     beforeEach((done) => {
-      votationsSet.forEach((votation) => votation.creator_id = userId );
+      votationsSet.forEach((votation) => votation.creatorId = userId );
 
       Promise.all(votationsSet.map((votation) => 
         votations.query(votationConstants.CREATE_VOTATION, votation)

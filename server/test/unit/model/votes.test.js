@@ -42,12 +42,12 @@ describe('votes', () => {
     .then(() => votes.query(votesConstants.CLEAR_TABLE))
     .then(() => users.query(userConstants.CREATE_USER, userData))
     .then((result) => {      
-      userId = votationData.creator_id = voteData.creator_id = result.insertId;
+      userId = votationData.creatorId = voteData.creatorId = result.insertId;
       return Promise.resolve(votationData);
     })
     .then((data)=> votations.query(votationConstants.CREATE_VOTATION, data))
     .then((result) => {
-      votationId = voteData.votation_id = result.insertId;
+      votationId = voteData.votationId = result.insertId;
       return Promise.resolve(voteData);
     })
     .then(() => done());
@@ -69,14 +69,14 @@ describe('votes', () => {
   });
 
   describe('GET_VOTES_BY_VOTATION_ID', () => {
-    it('should get votes by corresponding votation_id', (done) => {
+    it('should get votes by corresponding votationId', (done) => {
       votes.query(votesConstants.CREATE_VOTE, voteData)
       .then(() => votes.query(votesConstants.CREATE_VOTE, {
         value: '2',
-        creator_id: voteData.creator_id,
-        votation_id: voteData.votation_id
+        creatorId: voteData.creatorId,
+        votationId: voteData.votationId
       }))
-      .then(() => votes.query(votesConstants.GET_VOTES_BY_VOTATION_ID, {votation_id: votationId}))
+      .then(() => votes.query(votesConstants.GET_VOTES_BY_VOTATION_ID, {votationId: votationId}))
       .then((result) => {
         expect(result.length).to.equal(2);
         expect(result[0].value).to.equal('8');
