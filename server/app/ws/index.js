@@ -64,9 +64,12 @@ const httpServer = require('http').Server
       let connectionDetails = { userId: '', votationId: '' };
       socket.on('join', ({ votationId, userId, creatorId }) => {
         if (userId === creatorId) {
+          console.log('creator logged with ' + userId);
           votationRoomsCreators[votationId] = socket;
+          console.log(votationRoomsCreators);
         }
         connectionDetails = { userId, votationId };
+        console.log('join|storeUserByVotation: ' + votationId + ' ' + userId);
         cache.storeUserByVotation(votationId, userId)
         .then(() => {
           return new Promise((resolve, reject) => {
@@ -134,7 +137,7 @@ const httpServer = require('http').Server
       });
   
       socket.on('SEND_VOTE', ({ voteData, votationId }) => {
-        console.log('sending vote for room: ' + votationId);         
+        console.log('sending vote for room: ' + votationId + ' ' + voteData.creatorId);         
         console.log(voteData);
         cache.storeVote(voteData)
         .then(() => cache.storeVoteByVotation(votationId, voteData.creatorId))
@@ -170,8 +173,8 @@ const httpServer = require('http').Server
         cache.getVotesByVotation(votationId)
         .then((votesData) => {
           return votesData.reduce((initial, vote) => {
-            vote.votation_id = votationId;
-            console.log('savind vote:');
+            vote.votationId = votationId;
+            console.log('savind vote for votation: ' + votationId);
             console.log(vote);
             return initial.then(() => votes.query(votesConstants.CREATE_VOTE, vote));
           }, Promise.resolve());
@@ -182,7 +185,12 @@ const httpServer = require('http').Server
         .then(() => {
           delete votationRoomsConnections[votationId];
           delete votationRoomsCreators[votationId];
-          console.log('closing...');
+          console.log('closing ' + votationId);
+          console.log(votationRoomsCreators);
+          if (socket.userId === votationData.creatorId) {
+            console.log('ura!')
+            return socket.emit('CLOSE_VOTATION', votationId);
+          }
           votationRoomsCreators[votationId].emit('CLOSE_VOTATION', votationId);          
         })
         .catch((err) => {
