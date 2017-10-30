@@ -68,7 +68,6 @@ module.exports = (con) => {
 
     storeVoteByVotation: function(votationId, creatorId) {
       const key = 'votation:' + votationId + ':votes';
-      console.log('storeVoteByVotation: ' + votationId + ' ' + creatorId);
       return new Promise((resolve, reject) => {        
         con.sadd(key, creatorId, (err, res) => {
           if (err) return reject(err);
@@ -131,7 +130,6 @@ module.exports = (con) => {
     ***************************************************************/
     storeUserByVotation: function(votationId, userId) {      
       const key = 'votation:' + votationId + ':users';
-      console.log('storeVoteByVotation: ' + votationId + ' ' + userId);
       return new Promise((resolve, reject) => {        
         con.sadd(key, userId, (err, res) => {
           if (err) return reject(err);

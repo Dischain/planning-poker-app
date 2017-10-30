@@ -26,13 +26,10 @@ const httpServer = require('http').Server
     votationRoomsCreators = {};
 
     io.on('connection', (socket) => {
-      // обновить список юзеров онлайн
-      // поместить в кеш, что юзер онлайн
-      // подключаться при выполнении аутентификации на клиенте
+      // update whether user online
     });
     io.on('disconnect', (socket) => {
-      // обновить список юзеров онлайн
-      // поместить в кеш, что юзер офлайн
+      // update whether user offline
     });
     
     io.of('/votations').on('connection', (socket) => {
@@ -46,7 +43,6 @@ const httpServer = require('http').Server
         .then(({ insertId }) => {
           cache.storeVotation(assign({}, votationData, { id: insertId }))
           .then(() => {
-            // votationRoomsCreators[insertId] = socket;
             socket.emit('VOTATION_CREATED', insertId);
           })
           .catch((err) => {
@@ -64,12 +60,10 @@ const httpServer = require('http').Server
       let connectionDetails = { userId: '', votationId: '' };
       socket.on('join', ({ votationId, userId, creatorId }) => {
         if (userId === creatorId) {
-          console.log('creator logged with ' + userId);
           votationRoomsCreators[votationId] = socket;
-          console.log(votationRoomsCreators);
         }
         connectionDetails = { userId, votationId };
-        console.log('join|storeUserByVotation: ' + votationId + ' ' + userId);
+
         cache.storeUserByVotation(votationId, userId)
         .then(() => {
           return new Promise((resolve, reject) => {
@@ -79,7 +73,6 @@ const httpServer = require('http').Server
               socket.userId = userId;        
               socket.votationId = votationId;
               
-              // connectionDetails = { userId, votationId };
               let temp = {}
               temp[userId] = socket;
               votationRoomsConnections[votationId] = temp;
@@ -100,10 +93,7 @@ const httpServer = require('http').Server
         });
       });
   
-      socket.on('disconnect', () => {
-        console.log('disconnecting...');
-        console.log('then ' + connectionDetails.userId);
-        console.log('votation id: ' + connectionDetails.votationId);
+      socket.on('disconnect', () => {        
         cache.removeUserFromVotation(connectionDetails.userId, connectionDetails.votationId)
         .then(() => {
           return new Promise((resolve, reject) => {
@@ -113,11 +103,8 @@ const httpServer = require('http').Server
             });
           });
         })
-        .then(() => {
-          console.log('then ' + connectionDetails.userId);
-          console.log('votation id: ' + connectionDetails.votationId);
+        .then(() => {          
           delete votationRoomsConnections[connectionDetails.votationId][connectionDetails.userId];
-          // socket.to(socket.votationId).emit('REMOVE_USER', socket.userId);
           socket.to(connectionDetails.votationId).emit('REMOVE_USER', connectionDetails.userId);
           connectionDetails = {};
         })
@@ -128,17 +115,13 @@ const httpServer = require('http').Server
         });
       });
   
-      socket.on('INVITE', ({ creatorId, votationId, title, description, users }) => {
-        console.log('invite users: '); console.log(users);
-        console.log(Object.keys(votationsConnections));
+      socket.on('INVITE', ({ creatorId, votationId, title, description, users }) => {        
         users.forEach((user) => {
           votationsConnections[user].emit('INVITE_USER', { creatorId, votationId, title, description, user });
         });
       });
   
       socket.on('SEND_VOTE', ({ voteData, votationId }) => {
-        console.log('sending vote for room: ' + votationId + ' ' + voteData.creatorId);         
-        console.log(voteData);
         cache.storeVote(voteData)
         .then(() => cache.storeVoteByVotation(votationId, voteData.creatorId))
         .then(() => votationRoomsCreators[votationId].emit('ADD_VOTE', voteData))
@@ -149,7 +132,6 @@ const httpServer = require('http').Server
       });
   
       socket.on('ABORT_VOTATION', () => {
-        console.log(socket.votationId);
         votations.query(votationsConstants.DELETE_VOTATION_BY_ID, socket.votationId)
         .then(() => cache.removeVotation(votationData.id, Object.keys(votationData)))
         .then(() => cache.removeAllVotesByVotation(votationData.id))
@@ -168,14 +150,12 @@ const httpServer = require('http').Server
 
       socket.on('SAVE_VOTATION', (votationData) => {        
         const votationId = connectionDetails.votationId;
-        console.log('closing for ' + votationId);
-        console.log(votationData);
+
         cache.getVotesByVotation(votationId)
         .then((votesData) => {
           return votesData.reduce((initial, vote) => {
             vote.votationId = votationId;
-            console.log('savind vote for votation: ' + votationId);
-            console.log(vote);
+
             return initial.then(() => votes.query(votesConstants.CREATE_VOTE, vote));
           }, Promise.resolve());
         })
@@ -185,10 +165,8 @@ const httpServer = require('http').Server
         .then(() => {
           delete votationRoomsConnections[votationId];
           delete votationRoomsCreators[votationId];
-          console.log('closing ' + votationId);
-          console.log(votationRoomsCreators);
+          
           if (socket.userId === votationData.creatorId) {
-            console.log('ura!')
             return socket.emit('CLOSE_VOTATION', votationId);
           }
           votationRoomsCreators[votationId].emit('CLOSE_VOTATION', votationId);          
