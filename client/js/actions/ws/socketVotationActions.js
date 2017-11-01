@@ -2,7 +2,7 @@
 
 import { 
   CREATE_VOTATION, 
-  SET_NEWLY_CREATED_VOTATION_ID 
+  SET_CURRENT_VOTATION 
 } from '../../constants/socketVotationConstants.js';
 
 let useSocket = true, nsp = 'votations';
@@ -16,9 +16,9 @@ export function createVotation(votationData) {
   };
 }
 
-export function setNewlyCreatedVotationId(votationId) {
+export function seCurrentVotation(votation) {
   return {
-      type: SET_NEWLY_CREATED_VOTATION_ID,
-      votationId
+      type: SET_CURRENT_VOTATION,
+      votation
   };
 }

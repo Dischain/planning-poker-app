@@ -4,7 +4,13 @@ import {
   JOIN, 
   INVITE, 
   SEND_VOTE, 
-  SAVE_VOTATION 
+  SAVE_VOTATION,
+
+  UPDATE_PARTICIPANTS, 
+  ADD_USER,
+  REMOVE_USER,
+  ADD_VOTE,
+  CLOSE_VOTATION
 } from '../../constants/socketVotationRoomConstants.js';
 
 let useSocket = true, nsp = 'votationRoom';
@@ -44,4 +50,25 @@ export function saveVotation(data) {
     type: SAVE_VOTATION, 
     promise: (socket) => socket.emit(SAVE_VOTATION, votationData)   
   };
+}
+
+export function updateParticipants(users) {
+  return { type: UPDATE_PARTICIPANTS, users };
+}
+
+export function enterVotation(data) {
+  return { type: ADD_USER, data };
+}
+
+export function removeUser(userId) {
+  return { type: REMOVE_USER, userId };
+}
+
+export function addVote(data) {
+  return { type: ADD_VOTE, data };
+}
+
+export function closeVotation(id) {
+  return {
+    type: CLOSE_VOTATION, id };
 }
