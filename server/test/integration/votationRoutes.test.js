@@ -120,8 +120,7 @@ describe('votation routes', () => {
         })
         .end((err, res) => {
           agent
-          .get('/votations')
-          .send({ limit: 10, offset: 0 })
+          .get('/votations?limit=10&offset=0')
           .end((err, res) => {
             const body = JSON.parse(res.body);
             
@@ -171,8 +170,7 @@ describe('votation routes', () => {
       .send(userData)
       .end((err, res) => {
         agent
-        .get('/votations_by_user/' + userId)
-        .send({ limit: 10, offset: 0 })
+        .get('/votations?creatorId=' + userId + '&limit=10&offset=0')
         .end((err, res) => {
           const body = JSON.parse(res.body);
           
@@ -210,8 +208,7 @@ describe('votation routes', () => {
         .send(userData)
         .end((err, res) => {
           agent
-          .get('/votations_search')
-          .send({ text: 'uber', limit: 10, offset: 0 })
+          .get('/votations?votation=uber&limit=10&offset=0')
           .end((err, res) => {
             const body = JSON.parse(res.body);
 

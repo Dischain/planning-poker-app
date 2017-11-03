@@ -30,48 +30,29 @@ router.post('/votations', users.isAuthenticated, (req, res) => {
 });
 
 router.get('/votations', users.isAuthenticated, (req, res) => {
-    votations.query(votationsConstants.GET_ALL_WITH_VOTES_LIMITED_BY_OFFSET, { 
-      limit: req.body.limit,
-      offset: req.body.offset
+  if (req.query.votation) {
+    return votations.query(votationsConstants.FIND_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
+      text: req.query.votation, limit: req.query.limit, offset: req.query.offset
     })
     .then((result) => {
       let combinedVotations = _combineVotesByVotations(result);
       res.status(200).json(JSON.stringify(combinedVotations));
     })
     .catch((err) => res.sendStatus(500));
-});
-
-router.get('/votations/:id', users.isAuthenticated, (req, res) => {
-    const votationId = req.params.id;
-
-    votations.query(votationsConstants.GET_FULL_VOTATION_BY_ID, { id: votationId })
+  } else if (req.query.creatorId) {
+    return votations.query(votationsConstants.GET_USER_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
+      creatorId: req.query.creatorId, limit: req.query.limit, offset: req.query.offset
+    })
     .then((result) => {
-      if (result.length === 0)
-        return res.sendStatus(404);
-
-      let votationData = {
-        title: result[0].title,
-        description: result[0].description,
-        creatorId: result[0].creatorId,
-        votationId: votationId,
-        createdAt: result[0].createdAt
-      };
-
-      let votes = result.map((item) => {
-        return { value: item.value, creatorId: item.userId, name: item.name };
-      });
-
-      res.status(200).json(JSON.stringify({
-        votationData: votationData,
-        votes: votes
-      }));
+      let combinedVotations = _combineVotesByVotations(result);
+      res.status(200).json(JSON.stringify(combinedVotations));
     })
     .catch((err) => res.sendStatus(500));
-});
+  }
 
-router.get('/votations_search', users.isAuthenticated, (req, res) => { 
-  votations.query(votationsConstants.FIND_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
-    text: req.body.text, limit: req.body.limit, offset: req.body.offset
+  votations.query(votationsConstants.GET_ALL_WITH_VOTES_LIMITED_BY_OFFSET, { 
+    limit: req.query.limit,
+    offset: req.query.offset
   })
   .then((result) => {
     let combinedVotations = _combineVotesByVotations(result);
@@ -80,13 +61,30 @@ router.get('/votations_search', users.isAuthenticated, (req, res) => {
   .catch((err) => res.sendStatus(500));
 });
 
-router.get('/votations_by_user/:id', users.isAuthenticated, (req, res) => {
-  votations.query(votationsConstants.GET_USER_VOTATIONS_WITH_VOTES_LIMITED_FROM_OFFSET, {
-    creatorId: req.params.id, limit: req.body.limit, offset: req.body.offset
-  })
+router.get('/votations/:id', users.isAuthenticated, (req, res) => {
+  const votationId = req.params.id;
+
+  votations.query(votationsConstants.GET_FULL_VOTATION_BY_ID, { id: votationId })
   .then((result) => {
-    let combinedVotations = _combineVotesByVotations(result);
-    res.status(200).json(JSON.stringify(combinedVotations));
+    if (result.length === 0)
+      return res.sendStatus(404);
+
+    let votationData = {
+      title: result[0].title,
+      description: result[0].description,
+      creatorId: result[0].creatorId,
+      votationId: votationId,
+      createdAt: result[0].createdAt
+    };
+
+    let votes = result.map((item) => {
+      return { value: item.value, creatorId: item.userId, name: item.name };
+    });
+
+    res.status(200).json(JSON.stringify({
+      votationData: votationData,
+      votes: votes
+    }));
   })
   .catch((err) => res.sendStatus(500));
 });
