@@ -54,6 +54,15 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/users', (req, res) => {
+  if (req.query.user) {
+    return users.query(userConstants.FIND_USERS_REGEX_LIMITED_FROM_OFFSET, {
+      name: req.query.user,
+      limit: req.query.limit,
+      offset: req.query.offset
+    }).then((result) => {
+      res.json(JSON.stringify(result));
+    }).catch((err) => res.sendStatus(500));
+  }
   users.query(userConstants.GET_ALL_LIMITED_WITH_OFFSET, {
     limit: req.body.limit, offset: req.body.offset
   })

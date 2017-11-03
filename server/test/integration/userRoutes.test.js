@@ -92,19 +92,46 @@ describe('users routes', () => {
     });
 
     it('should return user by id', (done) => {
-        const userPath = '/users/' + userId;
+      const userPath = '/users/' + userId;
 
+      chai.request(server)
+      .get(userPath)
+      .end((err, res) => {
+        const body = JSON.parse(res.body);
+  
+        res.should.have.status(200);
+        expect(body.name).to.equal(userData.name);
+        expect(body.email).to.equal(userData.email);
+        expect(body.userId).to.equal(userId);
+        done();
+      });
+    });
+
+    it ('should find user by name using regex', (done) => {
+      const searchQuery = '/users?user=user&limit=10&offset=0';
+
+      let userPromises = [];
+      
+      for (let i = 0; i <= 100; i++) {
+        userPromises.push(users.query(userConstants.CREATE_USER, {
+          name: i + userData.name + i,
+          email: userData.email + i,
+          password: userData.password
+        }));
+      }
+
+      Promise.all(userPromises)
+      .then(() => {
         chai.request(server)
-        .get(userPath)
+        .get(searchQuery)
         .end((err, res) => {
           const body = JSON.parse(res.body);
-    
+
           res.should.have.status(200);
-          expect(body.name).to.equal(userData.name);
-          expect(body.email).to.equal(userData.email);
-          expect(body.userId).to.equal(userId);
+          expect(body.length).to.equal(10);
           done();
-        });
+        })
+      })
     });
   });
 
