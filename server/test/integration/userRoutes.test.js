@@ -79,8 +79,7 @@ describe('users routes', () => {
       })
       .then(() => chai.request(server))
       .then((server) => {
-        server.get('/users')
-        .send({ limit: 10, offset: 0 })
+        server.get('/users?limit=10&offset=0')        
         .end((err, res) => {
           const body = JSON.parse(res.body);
   

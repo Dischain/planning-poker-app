@@ -63,8 +63,9 @@ router.get('/users', (req, res) => {
       res.json(JSON.stringify(result));
     }).catch((err) => res.sendStatus(500));
   }
+
   users.query(userConstants.GET_ALL_LIMITED_WITH_OFFSET, {
-    limit: req.body.limit, offset: req.body.offset
+    limit: req.query.limit, offset: req.query.offset
   })
   .then((result) => res.json(JSON.stringify({ users: result })))
   .catch((err) => res.sendStatus(500));
