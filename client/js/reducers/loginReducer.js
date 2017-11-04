@@ -1,3 +1,5 @@
+'use strict';
+
 import { 
   SET_AUTH, 
   CHANGE_LOGIN_FORM, 
