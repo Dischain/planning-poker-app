@@ -13,6 +13,48 @@ import {
 import { API_BASE_PATH } from '../../config.js';
 import { browserHistory } from 'react-router';
 
+export function searchVotations(text, limit, offset) {
+  return (dispatch, getState) => {
+    dispatch(sendingVotationsSearchRequest(true));
+
+    let _status;
+    const query = '?votations=' + text 
+      + '&limit=' + limit
+      + '&offset=' + offset;
+
+    return fetch(API_BASE_PATH + '/votations' + query, {
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      method: 'GET',
+      credentials: 'include',
+    })
+    .then((res) => {
+      _status = res.status;
+      return res.json();
+    })
+    .then((json) => {
+      let data = JSON.parse(json);
+
+      if (_status === 200) {
+        dispatch(setVotationsSearchResult(data));
+      } else if (_status === 401) {        
+        browserHistory.push('/login');
+      } else {
+        // TODO: handle error
+      }
+      dispatch(changeVotationsSearchBox(''));
+      dispatch(sendingVotationsSearchRequest(false));
+    })
+    .catch((err) => {
+      dispatch(sendingVotationsSearchRequest(false));
+      // TODO: handle error
+    })
+  }
+}
+
 export function searchUsers(text, limit, offset) {
   return (dispatch, getState) => {
     dispatch(sendingUsersSearchRequest(true));
@@ -41,6 +83,7 @@ export function searchUsers(text, limit, offset) {
       if (_status === 200) {
         dispatch(setUsersSearchResult(data));
         dispatch(changeUsersSearchBox(''));
+        console.log(data);
       } else if (_status === 401) {
         dispatch(changeUsersSearchBox(''));
         browserHistory.push('/login');

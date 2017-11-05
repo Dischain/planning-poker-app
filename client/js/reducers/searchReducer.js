@@ -44,14 +44,18 @@ export default function searchReducer(state = initialState, action) {
       return assign({}, state, {
         sendingVotationsSearchRequest: action.sending
       });
-    case SET_USERS_SEARCH_RESULT:
+    case SET_USERS_SEARCH_RESULT: {
+      let newResult = state.usersSearchResult.concat(action.data);
       return assign({}, state, {
-        usersSearchResult: action.data
+        usersSearchResult: newResult
       });
-      case SET_VOTATIONS_SEARCH_RESULT:
+    }
+    case SET_VOTATIONS_SEARCH_RESULT: {
+      let newResult = state.votationsSearchResult.concat(action.data);
       return assign({}, state, {
-        votationsSearchResult: action.data
+        votationsSearchResult: newResult
       });
+    }
     default:
       return state;
   }
