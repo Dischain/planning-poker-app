@@ -14,6 +14,7 @@ import HomePage from './components/pages/HomePage.js';
 import rootReducer from './reducers/index.js';
 import { fetchUser } from './actions/userActions.js';
 
+import 'file?name=[name].[ext]!../img/search-icon.png';
 import '../css/main.css';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
