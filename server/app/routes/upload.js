@@ -7,6 +7,11 @@ const router = require('express').Router()
     , userConstants = require('../model/users').constants;
 
 router.post('/upload', (req, res) => {
+  console.log('uploading')
+  console.log(req.headers)
+  console.log(req.file);
+  console.log(req.files)
+  console.log(req.body);
   let id = req.body.id;
   let file = req.file.avatarField;
   upload.mv(file)

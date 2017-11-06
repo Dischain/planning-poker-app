@@ -39,8 +39,7 @@ class RegisterPage extends Component {
 
           <form 
             className = 'form' 
-            onSubmit = {this._onSubmit.bind(this)}
-            encType = 'multipart/form-data'
+            onSubmit = {this._onSubmit.bind(this)}            
           >
             <ControlledInput formId = {'name'}
               fieldName = {'Name'}

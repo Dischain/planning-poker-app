@@ -58,10 +58,16 @@ export function register(userData) {
         dispatch(setErrorMessage('login', commonErrors.ERROR));
       }
 
-      return upload('avatar', registerReducer.registerFormState.avatar);
+      return upload(
+        API_BASE_PATH + '/upload', 
+        registerReducer.registerFormState.avatar, 
+        'avatar',
+        data.userId
+      );
     })
-    .then(() => {
+    .then((res) => {
       dispatch(sendingRegisterRequest(false));
+      console.log(res);
     })
     .catch((err) => {
       dispatch(setErrorMessage('login', commonErrors.ERROR));
