@@ -28,6 +28,9 @@
         "methods": ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
         "optionsSuccessStatus": "200"
       }
+    },
+    "upload": {
+      "path": "./server/upload"
     }
   },
   "production": {

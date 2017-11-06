@@ -37,7 +37,11 @@ class RegisterPage extends Component {
             <h2 className='form-page__form-heading'>Register</h2>
           </div>
 
-          <form className = 'form' onSubmit = {this._onSubmit.bind(this)}>
+          <form 
+            className = 'form' 
+            onSubmit = {this._onSubmit.bind(this)}
+            encType = 'multipart/form-data'
+          >
             <ControlledInput formId = {'name'}
               fieldName = {'Name'}
               type = {'text'}
@@ -68,7 +72,12 @@ class RegisterPage extends Component {
               onChange = {this._onChangePassword2.bind(this)}
               errorMessage = {this.props.registerFormErrorMessages.password2}
             />
-
+            <input 
+              type = 'file' 
+              name = 'avatarField' 
+              onChange = {this._onChangeFile.bind(this)}
+            />
+            
             <ErrorMessage errorMessage = {this.props.registerError} />
 
             <div className = 'form__submit-btn-wrapper'>
@@ -82,7 +91,7 @@ class RegisterPage extends Component {
 
   _onSubmit(event) {
     event.preventDefault();
-
+    console.log(this.props.registerFormState)
     if (this.props.isRegisterFormValid) {
       this.props.register({
         name: this.props.registerFormState.name,
@@ -91,6 +100,21 @@ class RegisterPage extends Component {
         avatar: this.props.registerFormState.avatar
       });
     }
+  }
+
+  _onChangeFile(event) {
+    let reader = new FileReader();
+    let file = event.target.files[0];
+    
+    reader.onloadend = () => {
+      let newState = assign({}, this.props.registerFormState, {
+        avatar: file
+      });
+      
+      this.props.dispatch(changeForm(newState));
+    }
+
+    reader.readAsDataURL(file)
   }
 
   _onChangeName(event) {

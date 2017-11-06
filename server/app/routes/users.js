@@ -1,5 +1,8 @@
+'use strict';
+
 const router = require('express').Router()
     , passport = require('passport')
+    // , upload = require('../upload')
     , modelNames = require('../model').modelNames
     , users = require('../model').getModel(modelNames.USERS_MODEL)
     , userConstants = require('../model/users').constants;
@@ -9,12 +12,21 @@ router.post('/register', (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    avatar: req.body.avatar
+    avatar: ''
   };
 
+  // let file = req.file.avatarField;
+  // upload.mv(file)
+  // .then((pathToAvatar) => {
+  //   credentials.avatar = pathToAvatar;
+  //   return users.register(credentials);
+  // })
   users.register(credentials)
-  .then((result) => res.status(201).json(JSON.stringify({userId: result.insertId})))
+  .then((result) => 
+    res.status(201).json(JSON.stringify({userId: result.insertId}))
+  )
   .catch((err) => {
+    console.log(err);
     if (err.code === 'ER_DUP_ENTRY')
       res.status(409).json(JSON.stringify({message: 'Email exists'})); 
     else

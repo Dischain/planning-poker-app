@@ -13,6 +13,9 @@ const express = require('express')
     , passport = require('./auth')
     , userRouter = require('./routes/users.js')
     , votationsRouter = require('./routes/votations.js')
+    , uploaderRouter = require('./routes/upload.js')
+
+    , uploader = require('./upload')
 
     , app = express()
     , webSocketServer = require('./ws')(app)
@@ -48,22 +51,22 @@ app.use(passport.session());
 
 app.use('/', userRouter);
 app.use('/', votationsRouter);
+app.use('/', uploaderRouter);
 
 app.use((req, res, next) => {
   res.status(404);
   res.json({'messsage': 'Not Found'});
 });
 
-//app.listen(config.app.port, () => {
-  db.init()
-  .then(() => {
-    webSocketServer.listen(config.app.port);
-    console.log('Listening on port ' + config.app.port);
-  })  
-  .catch((err) => {
-    console.log(err);
-    process.exit(1);
-  });
-//}); 
+db.init()
+.then(() => {
+  webSocketServer.listen(config.app.port);
+  uploader.init(app);
+  console.log('Listening on port ' + config.app.port);
+})  
+.catch((err) => {
+  console.log(err);
+  process.exit(1);
+}); 
 
 module.exports = app;

@@ -1,6 +1,7 @@
 'use strict';
 
-const constants = require('./index.js').constants;
+const constants = require('./index.js').constants
+    , DEfAULT_AVATAR_PATH = require('../../constants').DEfAULT_AVATAR_PATH;
 
 module.exports = (query, data) => {
   switch(query) {
@@ -9,10 +10,12 @@ module.exports = (query, data) => {
           'INSERT INTO USERS (name, email, password, avatar) VALUES ('
         + data.name + ', ' + data.email + ', '
         + data.password + ', ' + data.avatar + ');' :
-          'INSERT INTO USERS (name, email, password) VALUES ('
+          'INSERT INTO USERS (name, email, password, avatar) VALUES ('
         + data.name + ', ' + data.email + ', '
-        + data.password + ');';
+        + data.password + ', ' + DEfAULT_AVATAR_PATH + ');';
     }
+    case constants.UPDATE_AVATAR_BY_USER_ID:
+      return 'UPDATE USERS SET avatar=' + data.avatar + ' WHERE id = ' + data.id + ');';
     case constants.GET_ALL:
       return 'SELECT name, email, id FROM users;';
     case constants.GET_ALL_LIMITED_WITH_OFFSET:

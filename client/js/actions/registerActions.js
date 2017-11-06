@@ -10,13 +10,15 @@ import {
 import commonErrors from '../constants/commonConstants.js';
 import { API_BASE_PATH } from '../../config.js';
 import { setErrorMessage } from './commonActions.js';
+import { upload } from '../util/upload.js';
 import { browserHistory } from 'react-router';
 
 export function register(userData) {
   return (dispatch, getState) => {
     dispatch(sendingRegisterRequest(true));
 
-    let { isRegisterFormValid } = getState().registerReducer;
+    let { registerReducer } = getState()
+      , { isRegisterFormValid } = registerReducer;
 
     if (!isRegisterFormValid) {
       dispatch(sendingRegisterRequest(false));
@@ -55,6 +57,10 @@ export function register(userData) {
       } else {
         dispatch(setErrorMessage('login', commonErrors.ERROR));
       }
+
+      return upload('avatar', registerReducer.registerFormState.avatar);
+    })
+    .then(() => {
       dispatch(sendingRegisterRequest(false));
     })
     .catch((err) => {
