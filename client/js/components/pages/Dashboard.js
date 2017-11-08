@@ -3,11 +3,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import  SideBar from '../SideBar.js';
+
 class Dashboard extends Component {
   render() {
     return (
-      <div>
-        <h2>Dashboard</h2>
+      <div className = 'container clearfix'>
+        <SideBar />
       </div>
     );
   }
