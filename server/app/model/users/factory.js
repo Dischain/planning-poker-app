@@ -15,7 +15,7 @@ module.exports = (query, data) => {
         + data.password + ', ' + DEfAULT_AVATAR_PATH + ');';
     }
     case constants.UPDATE_AVATAR_BY_USER_ID:
-      return 'UPDATE USERS SET avatar=' + data.avatar + ' WHERE id = ' + data.id + ');';
+      return 'UPDATE USERS SET avatar=' + data.avatar + ' WHERE id = ' + data.id + ';';
     case constants.GET_ALL:
       return 'SELECT name, email, id FROM users;';
     case constants.GET_ALL_LIMITED_WITH_OFFSET:
