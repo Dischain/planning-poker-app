@@ -13,6 +13,8 @@ import { setErrorMessage } from './commonActions.js';
 import { upload } from '../util/upload.js';
 import { browserHistory } from 'react-router';
 
+const assign = Object.assign;
+
 export function register(userData) {
   return (dispatch, getState) => {
     dispatch(sendingRegisterRequest(true));
@@ -39,7 +41,6 @@ export function register(userData) {
         name: userData.name,
         email: userData.email, 
         password: userData.password2,
-        avatar: userData.avatar
       })
     })
     .then((res) => {
@@ -57,17 +58,29 @@ export function register(userData) {
       } else {
         dispatch(setErrorMessage('login', commonErrors.ERROR));
       }
+      
+      if (registerReducer.registerFormState.avatar !== '') {
+        return upload(
+          API_BASE_PATH + '/upload', 
+          registerReducer.registerFormState.avatar, 
+          'avatar',
+          data.userId
+        ).then(() => {
+          dispatch(changeForm(assign({}, getState().registerFormState, {
+            avatar: ''
+          })))
+        });
+      }
 
-      return upload(
-        API_BASE_PATH + '/upload', 
-        registerReducer.registerFormState.avatar, 
-        'avatar',
-        data.userId
-      );
+      dispatch(changeForm(assign({}, getState().registerFormState, {
+        name: '',
+        email: '',
+        password1: '',
+        password2: ''
+      })));   
     })
     .then((res) => {
       dispatch(sendingRegisterRequest(false));
-      console.log(res);
     })
     .catch((err) => {
       dispatch(setErrorMessage('login', commonErrors.ERROR));
