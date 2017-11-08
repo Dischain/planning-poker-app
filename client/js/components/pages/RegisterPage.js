@@ -90,7 +90,7 @@ class RegisterPage extends Component {
 
   _onSubmit(event) {
     event.preventDefault();
-    console.log(this.props.registerFormState)
+
     if (this.props.isRegisterFormValid) {
       this.props.register({
         name: this.props.registerFormState.name,
