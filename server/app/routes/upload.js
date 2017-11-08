@@ -7,13 +7,11 @@ const router = require('express').Router()
     , userConstants = require('../model/users').constants;
 
 router.post('/upload', (req, res) => {
-  console.log('uploading')
-  console.log(req.headers)
-  console.log(req.file);
-  console.log(req.files)
-  console.log(req.body);
   let id = req.body.id;
-  let file = req.file.avatarField;
+  let file = req.files.avatar;
+
+  // TODO: generate random hash string
+  file.name = id + file.name;
   upload.mv(file)
   .then((pathToAvatar) => 
     users.query(userConstants.UPDATE_AVATAR_BY_USER_ID, { id, avatar: pathToAvatar })

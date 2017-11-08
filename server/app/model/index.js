@@ -56,9 +56,9 @@ exports.getModel = (modelName) => {
   };   
 
   if (modelName === 'users') {
-    model.register = (userData) => {
-      if (userData.avatar === undefined)
-        userData.avatar = constants.DEfAULT_AVATAR_PATH;
+    model.register = (userData) => {      
+      if (userData.avatar === undefined || userData.avatar === '')
+        userData.avatar = constants.DEFAULT_AVATAR_PATH;
       
       return new Promise((resolve, reject) => {
         bcrypt.genSalt(constants.SALT_WORK_FACTOR, (err, salt) => {

@@ -7,7 +7,7 @@ const express = require('express')
     , cors = require('cors')
     , cookieParser = require('cookie-parser')
     , RedisStore = require('connect-redis')(express_session)
-
+    
     , config = require('./config')
     , db = require('./db')
     , passport = require('./auth')
@@ -49,6 +49,8 @@ app.use(express_session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+uploader.init(app);
+
 app.use('/', userRouter);
 app.use('/', votationsRouter);
 app.use('/', uploaderRouter);
@@ -61,7 +63,7 @@ app.use((req, res, next) => {
 db.init()
 .then(() => {
   webSocketServer.listen(config.app.port);
-  uploader.init(app);
+  
   console.log('Listening on port ' + config.app.port);
 })  
 .catch((err) => {

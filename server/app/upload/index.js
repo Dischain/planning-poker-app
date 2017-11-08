@@ -19,19 +19,17 @@ module.exports = {
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath);
     }
-    
+
     app.use(uploader());
   },
 
   mv: function(file) {
-    console.log('mooving...')
     return new Promise((resolve, reject) => {
       let newPath = path.join(uploadPath, file.name);
 
       file.mv(newPath, (err) => {
         if (err) return reject(err);
-        console.log(newPath);
-        resolve(newPath);
+        resolve(file.name);
       })
     });
   }

@@ -7,7 +7,7 @@ module.exports = {
   MODE_PRODUCTION: 'production',
   MODE_DEVELOPMENT: 'development',
 
-  DEfAULT_AVATAR_PATH: 'default_avatar.png',
+  DEFAULT_AVATAR_PATH: 'default_avatar.png',
 
   SALT_WORK_FACTOR: 10
 };

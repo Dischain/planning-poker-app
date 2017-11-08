@@ -2,7 +2,6 @@
 
 const router = require('express').Router()
     , passport = require('passport')
-    // , upload = require('../upload')
     , modelNames = require('../model').modelNames
     , users = require('../model').getModel(modelNames.USERS_MODEL)
     , userConstants = require('../model/users').constants;
@@ -15,12 +14,6 @@ router.post('/register', (req, res) => {
     avatar: ''
   };
 
-  // let file = req.file.avatarField;
-  // upload.mv(file)
-  // .then((pathToAvatar) => {
-  //   credentials.avatar = pathToAvatar;
-  //   return users.register(credentials);
-  // })
   users.register(credentials)
   .then((result) => 
     res.status(201).json(JSON.stringify({userId: result.insertId}))
