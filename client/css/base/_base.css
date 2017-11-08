@@ -14,6 +14,12 @@ body {
   height: 100%;
 }
 
+a {
+  color: #0366d6;
+  text-decoration: none;
+  background-color: transparent;
+}
+
 body {
 	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   padding-top: $nav-height;

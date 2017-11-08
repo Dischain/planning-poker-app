@@ -1,0 +1,35 @@
+.side-bar {
+  width: 230px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+.side-bar__avatar {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  background-size: 214px 214px;
+}
+
+.side-bar__name {
+  font-size: 26px;
+  line-height: 30px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.sb-details {
+  padding-top: 15px;
+  width: 100%;
+  border-top: 1px #e1e4e8 solid;
+}
+
+.sb-details__email {
+  width: 100%;
+  padding-left: 20px;
+  padding-top: 4px;
+  font-size: 14px;
+  color: #24292e;
+  line-height: 1.5;
+}
+
