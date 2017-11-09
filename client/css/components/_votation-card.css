@@ -1,0 +1,18 @@
+.votation-card {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
+  border-bottom: 1px #e1e4e8 solid; 
+}
+
+.votation-card__name {
+  margin-bottom: 4px;
+}
+.votation-card__desc {
+  margin-bottom: 8px;
+}
+.votation-card__votes {
+  display: inline-block;
+  margin-top: 8px;
+  max-width: 240px;
+}

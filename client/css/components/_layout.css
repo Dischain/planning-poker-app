@@ -5,3 +5,9 @@
   margin-right: auto;
   box-sizing: border-box;
 }
+
+.content {
+  padding-left: 8px;
+  width: 75%;
+  box-sizing: border-box;
+}

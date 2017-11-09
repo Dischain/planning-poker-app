@@ -1,0 +1,38 @@
+.user-card {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  width: 100%;
+  border-bottom: 1px #e1e4e8 solid;        
+}
+
+.user-card__avatar {  
+  max-width: 75px; 
+  max-height: 75px;
+}
+
+.user-card__name {
+  margin-left: 15px;      
+  word-wrap: break-word;
+}
+
+.user-card-sm {
+  padding: 5px;
+  color: #6a737c;
+  width: 200px;
+  box-sizing: border-box;
+  background-color: #E0EAF1;
+}
+.user-card-sm__date {
+  margin-top: 1px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-decoration: none;
+}
+.user-card-sm__avatar {
+  background-size: 50px 50px;
+}
+.user-card-sm__name {
+  margin-left: 8px;
+  line-height: 17px;
+  word-wrap: breal-word;
+}
