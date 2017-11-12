@@ -1,3 +1,17 @@
+'use strict';
+
+import {
+  DATA_LIST_VOTATIONS_VIEW,
+  DATA_LIST_USER_VOTATIONS_VIEW,
+  DATA_LIST_VOTATIONS_SEARCH_VIEW,
+  DATA_LIST_USERS_SEARCH_VIEW,
+
+  SET_CUR_VIEW,
+  SET_CUR_VIEW_DATA,
+  SENDING_PAGINATION_REQUEST,
+  SET_PAGINATION_OFFSET
+} from '../constants/dataListConstants.js'
+
 import { 
   getVotations, 
   getUserVotations, 

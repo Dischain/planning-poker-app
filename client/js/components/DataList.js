@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import VotationCard from './VotationCard.js';
 import UserCard from './UserCard.js';
+import EmptyList from './EmptyList.js';
 
 import { 
   getVotations, 
@@ -24,16 +25,17 @@ import {
   DATA_LIST_VOTATIONS_SEARCH_VIEW,
   DATA_LIST_USERS_SEARCH_VIEW
 } from '../constants/dataListConstants.js'
-
+import { browserHistory } from 'react-router';
 class DataList extends Component {
   componentDidMount() {
     window.addEventListener('scroll', this.onScroll, false);
 
     const { 
-      location, getVotations, getUserVotations,
+      getVotations, getUserVotations,
       setCurView, setPaginationOffset,
       currentPaginationOffset
     } = this.props;
+    const location = browserHistory.getCurrentLocation().pathname;
 
     if (location === '/dashboard') {
       getVotations({ 
@@ -52,44 +54,79 @@ class DataList extends Component {
   }
 
   render() {
-    let items; 
-    //if (this.props.currentView === '') {
-      /*if (this.props.currentView === DATALIST_VIEW_VOTATIONS) {
-        items = this.props.votations.map(item => {
-          return (
-            <VotationCard
-              name = {item.name}
-              desc = {item.desc}
-              votes = {item.votes}
-              creatordata = {item.creatordata}
-            />
-          );
-        });*/
-      }
-    //}
-    return (
-      <div>
-        <ul>
+    const { currentView, currentViewData } = this.props;
+    console.log(currentViewData);
+    let dataList;
 
-        </ul>
-      </div>
-    );
+    if (currentViewData.length === 0) {
+      return ( <EmptyList /> );
+    } else {    
+      if (currentView === DATA_LIST_VOTATIONS_VIEW ||
+          currentView === DATA_LIST_USER_VOTATIONS_VIEW ||
+          currentView === DATA_LIST_VOTATIONS_SEARCH_VIEW) {
+          
+        dataList = currentViewData.map((item, i) => {
+          return <VotationCard key = {i}/>
+        });
+      } else if (currentView === DATA_LIST_USERS_SEARCH_VIEW) {
+        dataList = currentViewData.map((item, i) => {
+          return <UserCard key = {i}/>
+        });
+      }
+      return(
+        //{dataList}
+        <p>Hello</p>
+      );
+    }
   }
 
   onScroll() {
+    const { currentPaginationOffset, currentView } = this.props;
+
     if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 400)) {
-      // start pagination
+      let userId;
+      if (currentView === DATA_LIST_USER_VOTATIONS_VIEW) {
+        userId = Number.parseInt(location.split('/')[2])
+      }
+
+      this.props.dispatchLastRequest(currentView, {
+        offset: currentPaginationOffset, 
+        limit: DEFAULT_PAGINATION_LIMIT, 
+        userId
+      });
     }
   }
 }
 
-DataList.prototypes = {
-  currentView: PropTypes.string.isRequired,
-  currentPaginationOffset: PropTypes.number.isRequired,
-  votations: PropTypes.array.isRequired,
-  users: PropTypes.array.isRequired,
-  sendingPaginationRequest: PropTypes.bool.isRequired
-};
+function mapStateToProps({ dataListReducer }) {
+  return {
+    currentView: dataListReducer.currentView,
+    currentViewData: dataListReducer.currentViewData,
+    currentPaginationOffset: dataListReducer.currentPaginationOffset
+  };
+}
 
-// default for /users/:id - user`s votations
-// default for /dashboard - last votations
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch: func => dispatch(func),
+    dispatchLastRequest: data => dispatch(dispatchLastRequest(data)),
+    getVotations: data => dispatch(getVotations(data)),
+    getUserVotations: data => dispatch(getUserVotations(data))
+  }
+}
+
+DataList.prototypes = {
+  getVotations: PropTypes.func.isRequired,
+  getUserVotations: PropTypes.func.isRequired,
+  searchVotations: PropTypes.func.isRequired,
+
+  searchUsers: PropTypes.func.isRequired,
+
+  currentlySendingPaginationReq: PropTypes.bool.isRequired,
+  currentView: PropTypes.bool.isRequired,
+  currentViewData: PropTypes.bool.isRequired,
+  currentPaginationOffset: PropTypes.number.isRequired,
+  sendingPaginationRequest: PropTypes.bool.isRequired,  
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DataList);

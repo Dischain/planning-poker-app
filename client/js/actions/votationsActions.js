@@ -40,7 +40,7 @@ export function getVotations(data) {
     })
     .then((json) => { 
       let data = JSON.parse(json);
-
+      console.log(data);
       if (_status === 200) {
         dispatch(setCurViewData(data));
 

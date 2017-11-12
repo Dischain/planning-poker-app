@@ -17,7 +17,9 @@ class Dashboard extends Component {
       <div className = 'container clearfix'>
         <SideBar />
         <div className = 'content float-left'>
-          <DataList defaultView = {DEFAULT_DATALIST_DASHBOARD}/>
+          <div className = 'position-relative'>
+            <DataList defaultView = {DEFAULT_DATALIST_DASHBOARD}/>
+          </div>
         </div>
       </div>
     );

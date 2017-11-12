@@ -9,6 +9,8 @@ import Footer from './Footer.js';
 
 class Layout extends Component {
   render() {
+    const { children, ...otherProps } = this.props;
+    
     return (
       <div className='wrapper'>
         <Nav 
@@ -17,7 +19,7 @@ class Layout extends Component {
           location={this.props.location} 
           dispatch={this.props.dispatch}
         />
-        {React.cloneElement(this.props.children)}
+        {React.cloneElement(children, otherProps)}
         <Footer />
       </div>
     );
