@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import SideBar from '../SideBar.js';
 import DataList from '../DataList.js';
+import VotationsFilter from '../VotationsFilter.js';
 
 import {
   DEFAULT_DATALIST_USER,
@@ -18,6 +19,7 @@ class Dashboard extends Component {
         <SideBar />
         <div className = 'content float-left'>
           <div className = 'position-relative'>
+            <VotationsFilter />
             <DataList defaultView = {DEFAULT_DATALIST_DASHBOARD}/>
           </div>
         </div>
