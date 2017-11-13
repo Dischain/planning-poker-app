@@ -14,7 +14,7 @@ import {
   searchVotations 
 } from '../actions/votationsActions.js';
 import { searchUsers } from '../actions/userActions.js';
-
+import { setCurQueryValue } from '../actions/dataListActions.js';
 import {
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_OFFSET,
@@ -57,7 +57,7 @@ class DataList extends Component {
     const { currentView, currentViewData } = this.props;
     console.log(currentViewData);
     let dataList;
-
+    
     if (currentViewData.length === 0) {
       return ( <EmptyList /> );
     } else {    
@@ -74,8 +74,8 @@ class DataList extends Component {
         });
       }
       return(
-        //{dataList}
-        <p>Hello</p>
+        {dataList}
+        //<p>Hello</p>
       );
     }
   }
@@ -84,15 +84,15 @@ class DataList extends Component {
     const { currentPaginationOffset, currentView } = this.props;
 
     if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 400)) {
-      let userId;
+      let userId, data = {};
       if (currentView === DATA_LIST_USER_VOTATIONS_VIEW) {
-        userId = Number.parseInt(location.split('/')[2])
+        userId = Number.parseInt(location.split('/')[2]);
+        this.props.setCurQueryValue({ userId });
       }
 
       this.props.dispatchLastRequest(currentView, {
         offset: currentPaginationOffset, 
-        limit: DEFAULT_PAGINATION_LIMIT, 
-        userId
+        limit: DEFAULT_PAGINATION_LIMIT
       });
     }
   }
@@ -111,8 +111,9 @@ function mapDispatchToProps(dispatch) {
     dispatch: func => dispatch(func),
     dispatchLastRequest: data => dispatch(dispatchLastRequest(data)),
     getVotations: data => dispatch(getVotations(data)),
-    getUserVotations: data => dispatch(getUserVotations(data))
-  }
+    getUserVotations: data => dispatch(getUserVotations(data)),
+    setCurQueryValue: data => dispatch(setCurQueryValue(data))
+  };
 }
 
 DataList.prototypes = {

@@ -1,0 +1,5 @@
+'use strict';
+
+module.exports = {
+  CHANGE_SEARCH_VOTATIONS_VALUE: 'CHANGE_SEARCH_VOTATIONS_VALUE'
+}

@@ -24,6 +24,7 @@ class Nav extends Component {
           Dashboard
         </Link>
         <SearchBox 
+          className = 'nav__item'
           style = {{ width: '400px' }}
           type = {'text'}
           id = {'usersSeatchText'}

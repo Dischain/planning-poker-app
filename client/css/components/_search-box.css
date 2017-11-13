@@ -7,11 +7,11 @@
   height: 30px;
   border: 1px solid $brand-color;
   box-sizing: border-box;
-  border-radius: 2px;
+  border-radius: 3px;
   font-size: 16px;
   padding-left: 25px;
   background-color: #fff;
   background-image: url('../img/search-icon-sm.png');
   background-repeat: no-repeat;
   background-position: 5px 5px;
-} 
+}

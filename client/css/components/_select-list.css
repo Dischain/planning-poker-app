@@ -1,0 +1,9 @@
+.select-list {
+  border: 1px solid #6CC0E5;
+  background: transparent;
+  border-radius: 3px;
+  width: auto;
+  padding: 5px 10px 5px 5px;
+  font-size: 16px;
+  height: 34px;
+}
