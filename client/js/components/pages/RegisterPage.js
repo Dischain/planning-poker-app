@@ -70,16 +70,21 @@ class RegisterPage extends Component {
               value = {this.props.registerFormState.password2}
               onChange = {this._onChangePassword2.bind(this)}
               errorMessage = {this.props.registerFormErrorMessages.password2}
-            />
-            <input 
-              type = 'file' 
-              name = 'avatarField' 
-              onChange = {this._onChangeFile.bind(this)}
-            />
+            />                        
             
             <ErrorMessage errorMessage = {this.props.registerError} />
 
             <div className = 'form__submit-btn-wrapper'>
+            
+              <input 
+                type = {'file'}
+                id = 'file'
+                name = 'avatarField' 
+                className = 'inputfile'
+                onChange = {this._onChangeFile.bind(this)}
+              />
+              <label htmlFor = 'avatarField'>Select avatar</label>
+
               {submitBtn}
             </div>
           </form>
