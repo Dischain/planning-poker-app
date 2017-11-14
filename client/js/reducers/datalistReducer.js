@@ -5,6 +5,7 @@ import {
 
   SET_CUR_VIEW,
   SET_CUR_VIEW_DATA,
+  CLEAR_CUR_VIEW_DATA,
   SET_CUR_QUERY_VALUE,
   SENDING_PAGINATION_REQUEST,
   SENDING_SEARCH_REQUEST,
@@ -40,6 +41,10 @@ export default function datalistReducer(state = initialState, action) {
         currentViewData: newData
       });
     }
+    case CLEAR_CUR_VIEW_DATA:
+      return assign({}, state, {
+        currentViewData: []
+      });
     case SET_CUR_QUERY_VALUE:
       return assign({}, state, {
         currentQueryValue: action.currentQueryValue
@@ -54,7 +59,7 @@ export default function datalistReducer(state = initialState, action) {
       });
     case SET_PAGINATION_OFFSET:
       return assign({}, state, {
-        currentPaginationOffset: actions.offset
+        currentPaginationOffset: action.offset
       });
     default:
       return state;

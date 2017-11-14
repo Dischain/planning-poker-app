@@ -9,6 +9,7 @@ import {
   SET_CUR_VIEW,
   SET_CUR_VIEW_DATA,
   SET_CUR_QUERY_VALUE,
+  CLEAR_CUR_VIEW_DATA,
   SENDING_PAGINATION_REQUEST,
   SENDING_SEARCH_REQUEST,
   SET_PAGINATION_OFFSET
@@ -49,7 +50,10 @@ export function setCurViewData(data) {
   return { type: SET_CUR_VIEW_DATA, currentViewData: data }
 }
 
-export function setCurQueryValue(value) {
+export function clearCurViewData(value) {
+  return { type: CLEAR_CUR_VIEW_DATA, currentViewData: value };
+}
+export function setCurMainQueryValue(value) {
   return { type: SET_CUR_QUERY_VALUE, currentQueryValue: value };
 }
 

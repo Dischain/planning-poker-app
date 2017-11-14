@@ -14,12 +14,12 @@ class SideBar extends Component {
       <div className = 'side-bar float-left'>
         <img 
           className = 'side-bar__avatar' 
-          src={STATIC_SERVER_BASE_PATH + '/' + avatar} 
+          src={ STATIC_SERVER_BASE_PATH + '/' + avatar } 
           width="214" height="214">
         </img>
-        <div className = "side-bar__name"><span>{name}</span></div>
+        <div className = "side-bar__name"><span>{ name }</span></div>
         <div className = "sb-details">
-          <span className = "sb-details__email"><a href={email}>{email}</a></span>
+          <span className = "sb-details__email"><a href={ email }>{email}</a></span>
         </div>
       </div>
     );

@@ -9,7 +9,13 @@ import LoadingButton from './LoadingButton.js';
 import SearchBox from './SearchBox.js';
 
 import { logout } from '../actions/loginActions';
-import { searchUsers, changeUsersSearchBox } from '../actions/searchActions.js';
+import { 
+  searchUsers, 
+  changeSearchUsersValue,
+} from '../actions/userActions.js';
+import {
+  setPaginationOffset
+} from '../actions/dataListActions.js';
 
 import { 
   DEFAULT_PAGINATION_LIMIT, 
@@ -66,23 +72,26 @@ class Nav extends Component {
   _onChangeUsersSearchInput(event) {
     const value = event.target.value;
 
-    this.props.dispatch(changeUsersSearchBox(value));
+    this.props.dispatch(changeSearchUsersValue(value));
   }
 
   _onSubmitUsersSearch(event) {
     event.preventDefault();
 
-    this.props.searchUsers(
-      this.props.usersSearchBoxValue, DEFAULT_PAGINATION_LIMIT, DEFAULT_PAGINATION_OFFSET);
+    this.props.setPaginationOffset(DEFAULT_PAGINATION_OFFSET);
+    this.props.searchUsers({
+      user: this.props.searchUsersValue,
+      limit: DEFAULT_PAGINATION_LIMIT,
+      offset: DEFAULT_PAGINATION_OFFSET
+    });
   }
 }
 
-function mapStateToProps({ loginReducer, searchReducer }) {
+function mapStateToProps({ loginReducer, userReducer }) {
   return {
     sendingLogoutRequest: loginReducer.sendingLogoutRequest,
     loggedIn: loginReducer.loggedIn,
-    usersSearchBoxValue: searchReducer.usersSearchBoxValue,
-    sendingUsersSearchRequest: searchReducer.sendingUsersSearchRequest
+    searchUsersValue: userReducer.searchUsersValue
   };
 }
 
@@ -90,8 +99,10 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch: func => dispatch(func),
     logout: userData => dispatch(logout()),
-    searchUsers: (text, limit, offset) => dispatch(searchUsers(text, limit, offset))
-  }
+    searchUsers: data => dispatch(searchUsers(data)),
+    changeSearchUsersValue: value => dispatch(changeSearchUsersValue(value)),
+    setPaginationOffset: offset => dispatch(setPaginationOffset(offset))
+  };
 }
 
 Nav.prototypes = {

@@ -29,7 +29,7 @@ module.exports = (query, data) => {
       return 'SELECT name, email, id FROM users WHERE MATCH (name) AGAINST (' + data.name + 'IN BOOLEAN MODE) '                 
             + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
     case constants.FIND_USERS_REGEX_LIMITED_FROM_OFFSET:{
-      let escapedStr = 'SELECT name, email, id FROM users WHERE name LiKE "%' + data.name + '%" '
+      let escapedStr = 'SELECT name, email, id, avatar FROM users WHERE name LiKE "%' + data.name + '%" '
                      + 'LIMIT ' + data.limit + ' OFFSET ' + data.offset + ';';
       return escapedStr.replace(/'/g, '');
     }

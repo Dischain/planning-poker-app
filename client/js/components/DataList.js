@@ -56,26 +56,41 @@ class DataList extends Component {
   render() {
     const { currentView, currentViewData } = this.props;
     console.log(currentViewData);
+    console.log(currentViewData.length);
     let dataList;
     
     if (currentViewData.length === 0) {
+      console.log('empty');
       return ( <EmptyList /> );
     } else {    
       if (currentView === DATA_LIST_VOTATIONS_VIEW ||
           currentView === DATA_LIST_USER_VOTATIONS_VIEW ||
           currentView === DATA_LIST_VOTATIONS_SEARCH_VIEW) {
-          
+            console.log('not empty, votations');
         dataList = currentViewData.map((item, i) => {
-          return <VotationCard key = {i}/>
+          return (
+            <VotationCard 
+              key = { i }
+            />
+          );
         });
       } else if (currentView === DATA_LIST_USERS_SEARCH_VIEW) {
+        console.log('not empty, users');
         dataList = currentViewData.map((item, i) => {
-          return <UserCard key = {i}/>
+          return (
+            <UserCard 
+              key = {i}
+              id = { item.id }
+              name = { item.name }
+              avatar = { item.avatar }
+            />
+          );
         });
       }
       return(
-        {dataList}
-        //<p>Hello</p>
+        <ul>
+          {dataList}
+        </ul>
       );
     }
   }

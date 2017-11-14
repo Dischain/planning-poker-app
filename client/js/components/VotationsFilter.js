@@ -5,20 +5,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  DEFAULT_PAGINATION_LIMIT
+  DEFAULT_PAGINATION_LIMIT,
+  DEFAULT_PAGINATION_OFFSET
 } from '../constants/commonConstants.js';
+import {
+  ALL, OWNER_ONLY, OWNER_PARTICIPATED
+} from '../constants/votationsConstants.js';
 
 import { 
   searchVotations,
   changeSearchVotationsValue
 } from '../actions/votationsActions.js';
+import {
+  setPaginationOffset
+} from '../actions/dataListActions.js';
+
 import SearchBox from './SearchBox.js';
 
 class VotationsFilter extends Component {
   render() {    
     return (
       <div className = 'votations-filter'>
-        <form className = 'display-table' onSubmit = { (e) => e.preventDefault() }>
+        <form className = 'display-table' onSubmit = { this._onSearchSubmit.bind(this) }>
           <div className = 'votations-filter__sb-wrapper'>
           <input 
             className = 'sb' 
@@ -27,15 +35,15 @@ class VotationsFilter extends Component {
             autoComplete = 'off'
             value = { this.props.searchVotationsValue }
             onChange = { this._onChange.bind(this)}
-            onClick = { this._onClick.bind(this) }             
+            
           ></input>
           
           </div>
           <div className = 'votations-filter__controls-wrapper text-right'>
             <select className = 'select-list'>
-              <option value='All'>All</option>
-              <option value='Owner'>Owner</option>
-              <option value='Participated'>Participated</option>
+              <option value='All'>ALL</option>
+              <option value='Owner'>{OWNER_ONLY}</option>
+              <option value='Participated'>{OWNER_PARTICIPATED}</option>
             </select>
             <div className = 'btn'>
               <a >New</a>
@@ -51,13 +59,14 @@ class VotationsFilter extends Component {
 
     this.props.changeSearchVotationsValue(event.target.value);    
   }
-  _onClick(event) {
+  _onSearchSubmit(event) {
     event.preventDefault();
 
+    this.props.setPaginationOffset(DEFAULT_PAGINATION_OFFSET);
     this.props.searchVotations({
       text: this.props.searchVotationsValue,
       limit: DEFAULT_PAGINATION_LIMIT,
-      offset: 0
+      offset: DEFAULT_PAGINATION_OFFSET
     });
   }
 }
@@ -72,7 +81,8 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch: func => dispatch(func),
     changeSearchVotationsValue: value => dispatch(changeSearchVotationsValue(value)),
-    searchVotations: data => dispatch(searchVotations(data))
+    searchVotations: data => dispatch(searchVotations(data)),
+    setPaginationOffset: offset => dispatch(setPaginationOffset(offset))
   }
 }
 

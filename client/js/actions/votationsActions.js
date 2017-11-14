@@ -1,6 +1,10 @@
+'use strict';
+
 import { 
   setCurView, 
   setCurViewData,
+  clearCurViewData,
+  setCurMainQueryValue,
   setPaginationOffset,
   sendingPaginationRequest,
   sendingSearchRequest
@@ -12,10 +16,12 @@ import {
   DATA_LIST_USERS_SEARCH_VIEW
 } from '../constants/dataListConstants.js'
 import {
-  CHANGE_SEARCH_VOTATIONS_VALUE
+  CHANGE_SEARCH_VOTATIONS_VALUE,
+  CHANGE_FILTER_VOTATIONS_VALUE
 } from '../constants/votationsConstants.js';
 import {
-  DEFAULT_PAGINATION_OFFSET
+  DEFAULT_PAGINATION_OFFSET,
+  DEFAULT_PAGINATION_LIMIT
 } from '../constants/commonConstants.js';
 
 import { API_BASE_PATH } from '../../config.js';
@@ -25,16 +31,20 @@ import { constructQuery } from '../util/query.js';
 export function getVotations(data) {
   return (dispatch, getState) => {    
     if (getState().currentView !== DATA_LIST_VOTATIONS_VIEW) {
-      dispatch(setCurViewData([]));
+      dispatch(clearCurViewData([]));
       dispatch(setCurView(DATA_LIST_VOTATIONS_VIEW));
     }
 
     if (data.offset !== DEFAULT_PAGINATION_OFFSET) {
       dispatch(sendingPaginationRequest(true));
     } else {
+      const { limit, offset, ...rest } = data;
+      dispatch(setCurMainQueryValue(rest));
       dispatch(sendingSearchRequest(true));
     }
     
+    dispatch(setPaginationOffset(data.offset + DEFAULT_PAGINATION_LIMIT));
+
     let _status;
 
     fetch(API_BASE_PATH + '/votations' + constructQuery(data), {
@@ -74,15 +84,19 @@ export function getVotations(data) {
 export function getUserVotations(data) {
   return (dispatch, getState) => {    
     if (getState().currentView !== DATA_LIST_USER_VOTATIONS_VIEW) {
-      dispatch(setCurViewData([]));
+      dispatch(clearCurViewData([]));
       dispatch(setCurView(DATA_LIST_USER_VOTATIONS_VIEW));
     }
 
     if (data.offset !== DEFAULT_PAGINATION_OFFSET) {
       dispatch(sendingPaginationRequest(true));
     } else {
+      const { limit, offset, ...rest } = data;
+      dispatch(setCurMainQueryValue(rest));
       dispatch(sendingSearchRequest(true));
     }
+
+    dispatch(setPaginationOffset(data.offset + DEFAULT_PAGINATION_LIMIT));
     
     let _status;
 
@@ -123,16 +137,20 @@ export function getUserVotations(data) {
 export function searchVotations(data) {
   return (dispatch, getState) => {    
     if (getState().currentView !== DATA_LIST_VOTATIONS_SEARCH_VIEW) {
-      dispatch(setCurViewData([]));
+      dispatch(clearCurViewData([]));
       dispatch(setCurView(DATA_LIST_VOTATIONS_SEARCH_VIEW));
     }
 
     if (data.offset !== DEFAULT_PAGINATION_OFFSET) {
       dispatch(sendingPaginationRequest(true));
     } else {
+      const { limit, offset, ...rest } = data;
+      dispatch(setCurMainQueryValue(rest));
       dispatch(sendingSearchRequest(true));
     }
     
+    dispatch(setPaginationOffset(data.offset + DEFAULT_PAGINATION_LIMIT));
+
     let _status;
 
     fetch(API_BASE_PATH + '/votations' + constructQuery(data), {
@@ -171,4 +189,8 @@ export function searchVotations(data) {
 
 export function changeSearchVotationsValue(value) {
   return { type: CHANGE_SEARCH_VOTATIONS_VALUE, searchVotationsValue: value };
+}
+
+export function changeFilterVotationsValue(value) {
+  return { type: CHANGE_FILTER_VOTATIONS_VALUE, filterVotationsValue: value };
 }
