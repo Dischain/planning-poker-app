@@ -26,7 +26,40 @@ function post(path, data) {
   });
 }
 
-post('/register', user1)
+function get(path, query) {
+  return agent
+  .get(path)
+  .end((err, res) => {
+    const body = JSON.parse(res.body);    
+    Promise.resolve(body);
+  });
+}
+
+(function(){
+  let user1Id, user2Id, votation1Id, votation2Id
+  
+  post('/register', user1)
+  .then(res => { user1Id = res.userId; return Promise.resolve(); })
+  .then(() => post('/register', user2))
+  .then(res => { user2Id = res.userId; return Promise.resolve(); })
+  
+  .then(() => post('/login', user1Id))
+  .then(() => post('/votations', {
+    votationData: {
+      title: votation1.title,
+      description: votation1.description,
+      creatorId: user1Id
+    },
+    votes: [
+      { value: vote1.value, creatorId: user1Id },
+      { value: vote2.value, creatorId: user2Id }
+    ]
+  }))
+  .then(() => get('/logout'))
+
+  
+})()
+
 
 agent
 .post('/login')
