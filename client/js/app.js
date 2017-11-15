@@ -10,6 +10,7 @@ import LoginPage from './components/pages/LoginPage.js';
 import RegisterPage from './components/pages/RegisterPage.js';
 import Dashboard from './components/pages/Dashboard.js';
 import HomePage from './components/pages/HomePage.js';
+import NewVotation from './components/pages/NewVotation.js';
 
 import rootReducer from './reducers/index.js';
 import { fetchUser } from './actions/userActions.js';
@@ -37,9 +38,10 @@ ReactDOM.render(
       <Route component = {Layout}>
         <Route path = '/' component = {HomePage} />
         <Route path = '/login' component = {LoginPage} />
-        <Route path = '/register' component = {RegisterPage} />          
+        <Route path = '/register' component = {RegisterPage} />
         <Route onEnter = {checkAuth}>
-          <Route path = '/dashboard' component = {Dashboard} />          
+          <Route path = '/dashboard' component = {Dashboard} />
+          <Route path = '/new' component = {NewVotation} />
         </Route>
       </Route>
     </Router>

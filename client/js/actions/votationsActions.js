@@ -17,7 +17,8 @@ import {
 } from '../constants/dataListConstants.js'
 import {
   CHANGE_SEARCH_VOTATIONS_VALUE,
-  CHANGE_FILTER_VOTATIONS_VALUE
+  CHANGE_FILTER_VOTATIONS_VALUE,
+  CHANGE_NV_STATE
 } from '../constants/votationsConstants.js';
 import {
   DEFAULT_PAGINATION_OFFSET,
@@ -193,4 +194,9 @@ export function changeSearchVotationsValue(value) {
 
 export function changeFilterVotationsValue(value) {
   return { type: CHANGE_FILTER_VOTATIONS_VALUE, filterVotationsValue: value };
+}
+
+export function changeNVState(newState) {
+  console.log(newState);
+  return { type: CHANGE_NV_STATE, nvState: newState };
 }
