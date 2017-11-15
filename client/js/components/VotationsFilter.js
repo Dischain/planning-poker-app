@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import {
   DEFAULT_PAGINATION_LIMIT,
@@ -45,9 +46,7 @@ class VotationsFilter extends Component {
               <option value='Owner'>{OWNER_ONLY}</option>
               <option value='Participated'>{OWNER_PARTICIPATED}</option>
             </select>
-            <div className = 'btn'>
-              <a >New</a>
-            </div>
+            <Link to='/new' className = 'btn'>New</Link>            
           </div>            
         </form>
       </div>
@@ -59,6 +58,7 @@ class VotationsFilter extends Component {
 
     this.props.changeSearchVotationsValue(event.target.value);    
   }
+
   _onSearchSubmit(event) {
     event.preventDefault();
 

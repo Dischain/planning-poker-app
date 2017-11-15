@@ -45,7 +45,7 @@ class RegisterPage extends Component {
               fieldName = {'Name'}
               type = {'text'}
               value = {this.props.registerFormState.name}
-              placeholder = {'Enter Your Name'}
+              placeholder = {''}
               onChange = {this._onChangeName.bind(this)}
               errorMessage = {this.props.registerFormErrorMessages.name}
             />
@@ -53,7 +53,7 @@ class RegisterPage extends Component {
               fieldName = {'Email'}
               type = {'text'}
               value = {this.props.registerFormState.email}
-              placeholder = {'Enter Your Email'}
+              placeholder = {''}
               onChange = {this._onChangeEmail.bind(this)}
               errorMessage = {this.props.registerFormErrorMessages.email}
             />
