@@ -78,7 +78,7 @@ class LoginPage extends Component {
 
   _onChangeEmail(event) {
     let value = event.target.value;
-    console.log(value)
+
     let newState = assign(this.props.loginFormState, {
       email: value
     });

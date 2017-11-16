@@ -18,7 +18,9 @@ import {
 import {
   CHANGE_SEARCH_VOTATIONS_VALUE,
   CHANGE_FILTER_VOTATIONS_VALUE,
-  CHANGE_NV_STATE
+  CHANGE_NV_STATE_TITLE,
+  CHANGE_NV_STATE_DESC,
+  SET_NV_PARTICIPANTS
 } from '../constants/votationsConstants.js';
 import {
   DEFAULT_PAGINATION_OFFSET,
@@ -196,7 +198,14 @@ export function changeFilterVotationsValue(value) {
   return { type: CHANGE_FILTER_VOTATIONS_VALUE, filterVotationsValue: value };
 }
 
-export function changeNVState(newState) {
-  console.log(newState);
-  return { type: CHANGE_NV_STATE, nvState: newState };
+export function changeNVTitle(title) {
+  return { type: CHANGE_NV_STATE_TITLE, title };
+}
+
+export function changeNVTDesc(description) {
+  return { type: CHANGE_NV_STATE_DESC, description };
+}
+
+export function setNVParticipants(participants) {
+  return { type: SET_NV_PARTICIPANTS, participants };
 }

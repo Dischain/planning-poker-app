@@ -21,3 +21,41 @@
   color: white;
   background-color: $brand-color;
 }
+
+.btn-rm {
+  background-image: url('../img/rm-icon.png');
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  margin: 5px;  
+  background-repeat: no-repeat;
+  transform: scale(1);
+}
+
+.btn-add {
+  background-image: url('../img/plus-icon.png');
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  margin: 5px;  
+  background-repeat: no-repeat;
+  transform: scale(1);
+}
+
+.btn-add:hover, .btn-rm:hover {
+  cursor: pointer;
+  min-width: 30px;
+  min-height: 30px;
+  max-width: 30px;
+  max-height: 30px;
+  transform: scale(1.25);
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1.25);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1.25);   
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1.25);
+  transition: all 200ms ease-in;
+}

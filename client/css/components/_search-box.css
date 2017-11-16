@@ -15,3 +15,18 @@
   background-repeat: no-repeat;
   background-position: 5px 5px;
 }
+
+.search-box-sm input[type=text]{
+  width: 100%;
+  min-height: 34px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  font-size: 16px;
+  padding-left: 25px;
+  border: 1px #e1e4e8 solid;
+  background-color: #fff;
+  background-image: url('../img/search-icon-sm.png');
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  font-size: 14px;
+}

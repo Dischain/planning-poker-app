@@ -4,7 +4,9 @@ import {
   CHANGE_SEARCH_VOTATIONS_VALUE,
   CHANGE_FILTER_VOTATIONS_VALUE,
   
-  CHANGE_NV_STATE,
+  CHANGE_NV_STATE_TITLE,
+  CHANGE_NV_STATE_DESC,
+  SET_NV_PARTICIPANTS,
 
   ALL, OWNER_ONLY, OWNER_PARTICIPATED
 } from '../constants/votationsConstants.js';
@@ -15,10 +17,9 @@ const initialState = {
   searchVotationsValue: '',
   filterVotationsValue: ALL,
 
-  nvState: {
-    title: '',
-    description: ''
-  }
+  nvTitle: '',
+  nvDescription: '',
+  nvParticipants: []
 };
 
 export default function votationsReducer(state = initialState, action) {
@@ -31,12 +32,18 @@ export default function votationsReducer(state = initialState, action) {
       return assign({}, state, {
         filterVotationsValue: action.filterVotationsValue
       });
-    case CHANGE_NV_STATE: {
-      console.log(state.nvState)
+    case CHANGE_NV_STATE_TITLE: 
       return assign({}, state, {
-        nvState: action.nvState
+        nvTitle: action.title
       });
-    }
+    case CHANGE_NV_STATE_DESC: 
+      return assign({}, state, {
+        nvDescription: action.description
+      });   
+    case SET_NV_PARTICIPANTS:
+      return assign({}, state, {
+        nvParticipants: action.participants
+      });
     default:
       return state;
   }

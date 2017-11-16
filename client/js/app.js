@@ -15,7 +15,10 @@ import NewVotation from './components/pages/NewVotation.js';
 import rootReducer from './reducers/index.js';
 import { fetchUser } from './actions/userActions.js';
 
-import 'file?name=[name].[ext]!../img/search-icon.png';
+import 'file?name=[name].[ext]!../img/search-icon-sm.png';
+import 'file?name=[name].[ext]!../img/email-icon-sm.png';
+import 'file?name=[name].[ext]!../img/plus-icon.png';
+import 'file?name=[name].[ext]!../img/rm-icon.png';
 import '../css/main.css';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
