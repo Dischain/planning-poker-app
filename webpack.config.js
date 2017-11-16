@@ -34,7 +34,7 @@ module.exports = {
         exclude: /node_modules/, loader: 'babel-loader' 
       },
       {
-        test: /\.jpe?g$|\.gif$|\.png$/i,
+        test: /\.jpe?g$|\.gif$|\.png$|\.svg$/i,
         loader: "url-loader?limit=10000"
       }
     ]
