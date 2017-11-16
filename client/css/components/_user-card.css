@@ -22,17 +22,37 @@
   box-sizing: border-box;
   background-color: #E0EAF1;
 }
+
 .user-card-sm__date {
   margin-top: 1px;
   margin-bottom: 4px;
   font-size: 12px;
   text-decoration: none;
 }
+
 .user-card-sm__avatar {
   background-size: 50px 50px;
 }
+
 .user-card-sm__name {
   margin-left: 8px;
   line-height: 17px;
-  word-wrap: breal-word;
+  word-wrap: break-word;
+}
+
+.user-card-xsm {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  width: 100%;
+  border-bottom: 1px #e1e4e8 solid;   
+}
+
+.user-card-xsm__avatar {
+  background-size: 40px 40px;
+}
+
+.user-card-xsm__name {
+  margin-left: 6px;
+  line-height: 15px;
+  word-wrap: break-word;
 }
