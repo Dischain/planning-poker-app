@@ -1,0 +1,13 @@
+.usr-selector {      
+  
+}
+.usr-selector__selector { 
+  border: 1px #e1e4e8 solid;
+  border-radius: 3px;
+  margin: 10px 10px 5px 10px;
+  max-height: 250px;
+}
+.usr-selector__item:hover {
+  background-color: #e1e4e8;
+}
+.usr-selector__selected {}
