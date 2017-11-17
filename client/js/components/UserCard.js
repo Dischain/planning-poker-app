@@ -8,8 +8,9 @@ import { STATIC_SERVER_BASE_PATH } from '../../config.js';
 
 export default class UserCard extends Component {
   render() {
-    const { id, name, avatar } = this.props;
+    const { id, name, avatar, size } = this.props;
     const userPath = '/usesrs/' + id;
+    const block = 'user-card' + (size !== '' ? ('-' + size) : '');
     return (
       <li className = 'user-card clearfix display-block'>
         <img className = 'user-card__avatar float-left' 

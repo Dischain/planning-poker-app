@@ -54,13 +54,10 @@ class DataList extends Component {
   }
 
   render() {
-    const { currentView, currentViewData } = this.props;
-    console.log(currentViewData);
-    console.log(currentViewData.length);
+    const { currentView, currentViewData } = this.props;    
     let dataList;
     
     if (currentViewData.length === 0) {
-      console.log('empty');
       return ( <EmptyList /> );
     } else {    
       if (currentView === DATA_LIST_VOTATIONS_VIEW ||

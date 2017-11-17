@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import ControlledInput from '../ControlledInput.js';
 import ControllArea from '../ControlledArea.js';
-import SearchBox from '../SearchBox.js';
+import UserSelector from '../UserSelector.js';
 
 import { changeNVTitle, changeNVTDesc } from '../../actions/votationsActions.js';
 
@@ -21,22 +21,22 @@ class NewVotation extends Component {
           <h2>Create a new votation</h2>
         </div>
         <div className = 'nv-page__wrapper'>
-            <ControlledInput 
-              formId = {'title'}
-              fieldName = {'Title'}
-              type = {'text'}
-              value = {nvTitle} 
-              onChange = {this._onChangeTitle.bind(this)}
-            />
-            <ControllArea 
-              fieldName = {'Description'}
-              value = {nvDescription} 
-              onChange = {this._onChangeDesc.bind(this)}
-            />
-            <div className = 'btn-add'></div>
-            <div className = 'btn-rm'></div>
+          <ControlledInput 
+            formId = {'title'}
+            fieldName = {'Title'}
+            type = {'text'}
+            value = {nvTitle} 
+            onChange = {this._onChangeTitle.bind(this)}
+          />
+          <ControllArea 
+            fieldName = {'Description'}
+            value = {nvDescription} 
+            onChange = {this._onChangeDesc.bind(this)}
+          />
+          <div className = 'btn-add'></div>
+          <div className = 'btn-rm'></div>
           
-
+          <UserSelector />
         </div>
       </div>
     );

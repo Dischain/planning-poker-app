@@ -30,7 +30,7 @@ class Nav extends Component {
           Dashboard
         </Link>
         <SearchBox 
-          className = 'nav__item'
+          className = 'nav__item search-box'
           style = {{ width: '400px' }}
           type = {'text'}
           id = {'usersSeatchText'}
@@ -72,7 +72,7 @@ class Nav extends Component {
   _onChangeUsersSearchInput(event) {
     const value = event.target.value;
 
-    this.props.dispatch(changeSearchUsersValue(value));
+    this.props.changeSearchUsersValue(value);
   }
 
   _onSubmitUsersSearch(event) {

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 export default class SearchBox extends Component {
   render() {
     return (
-      <div className = 'search-box nav__item'>
+      <div className = {this.props.className}>
         <form onSubmit = {this.props.onSubmit}>
           <input
             style = {this.props.style}
@@ -19,8 +19,7 @@ export default class SearchBox extends Component {
             autoCorrect = 'off' 
             autoCapitalize = 'off'  
             spellCheck = 'false'
-          />
-          
+          />          
         </form>
       </div>
     );
@@ -34,5 +33,6 @@ SearchBox.prototypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  style: PropTypes.object.isRequired
+  style: PropTypes.object.isRequired,
+  className: PropTypes.string
 }
