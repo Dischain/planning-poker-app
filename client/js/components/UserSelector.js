@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import SearchBox from './SearchBox.js';
+import UserCard from './UserCard.js';
 
 import { 
   searchUsers, 
@@ -18,10 +19,13 @@ import {
   DEFAULT_PAGINATION_LIMIT, 
   DEFAULT_PAGINATION_OFFSET
 } from '../constants/commonConstants.js';
+import { STATIC_SERVER_BASE_PATH } from '../../config.js';
 
 class UserSelector extends Component {
   render() {
-    return (      
+    const { currentViewData, searchUsersValue } = this.props;
+    console.log(currentViewData)
+    return (       
       <div className="usr-selector clearfix">
         <div className="usr-selector__selector float-left">
           <SearchBox
@@ -29,20 +33,20 @@ class UserSelector extends Component {
             style = {{ width: '400px' }}
             type = {'text'}
             id = {'usersSeatchText'}
-            value = {this.props.usersSearchBoxValue}
+            value = { searchUsersValue }
             placeholder = {'Search users'}
             onChange = {this._onChangeUsersSearchInput.bind(this)}
             onSubmit = {this._onSubmitUsersSearch.bind(this)}
           />
-          <ul >
-            <li className= 'user-card-xsm usr-selector__item clearfix'>
-              <img className = 'user-card-xsm__avatar float-left' 
-                src = "./ava.png" width='45' height='45'></img>                  
-              <div className='user-card-xsm__name float-left'>
-                <a href="#">Dischain</a>
-              </div>
-            </li>
-            <li>{this.props.currentViewData}</li>
+          <ul >            
+            {currentViewData.map((item, i) => 
+              <UserCard
+                name = { item.name }
+                avatar = { STATIC_SERVER_BASE_PATH + '/' + item.avatar }
+                path = { '/usesrs/' + item.id }
+                size = 'xsm'
+              />
+            )}
           </ul>
         </div>
         <div className="usr-selector__selected float-left">
