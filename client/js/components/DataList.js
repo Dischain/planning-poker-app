@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { STATIC_SERVER_BASE_PATH } from '../../config.js';
+
 import VotationCard from './VotationCard.js';
 import UserCard from './UserCard.js';
 import EmptyList from './EmptyList.js';
@@ -63,8 +65,8 @@ class DataList extends Component {
       if (currentView === DATA_LIST_VOTATIONS_VIEW ||
           currentView === DATA_LIST_USER_VOTATIONS_VIEW ||
           currentView === DATA_LIST_VOTATIONS_SEARCH_VIEW) {
-            console.log('not empty, votations');
-        dataList = currentViewData.map((item, i) => {
+
+          dataList = currentViewData.map((item, i) => {
           return (
             <VotationCard 
               key = { i }
@@ -72,14 +74,14 @@ class DataList extends Component {
           );
         });
       } else if (currentView === DATA_LIST_USERS_SEARCH_VIEW) {
-        console.log('not empty, users');
         dataList = currentViewData.map((item, i) => {
           return (
-            <UserCard 
-              key = {i}
+            <UserCard             
+              key = {i}              
               id = { item.id }
+              path = { '/usesrs/' + item.id }
               name = { item.name }
-              avatar = { item.avatar }
+              avatar = { STATIC_SERVER_BASE_PATH + '/' + item.avatar }
             />
           );
         });

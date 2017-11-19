@@ -23,15 +23,15 @@ export default function userReducer(state = initialState, action) {
     case SET_USER:
       return assign({}, state, {
         userData: action.userData
-      });
+      });      
     case REMOVE_USER:
       return assign({}, state, {
         userData: action.userData
-      });
+      });      
     case CHANGE_SEARCH_USERS_VALUE:
       return assign({}, state, {
         searchUsersValue: action.searchUsersValue
-      });
+      });      
     default:
       return state;
   }

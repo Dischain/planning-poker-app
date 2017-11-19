@@ -34,27 +34,23 @@ export default function registerReducer(state = initialState, action) {
     case CHANGE_REGISTER_FORM:
       return assign({}, state, {
         registerFormState: action.newState
-      });
-      break;
+      });      
     case SENDING_REGISTER_REQUEST:
       return assign({}, state, {
         sendingRegisterRequest: action.sending
-      });
-      break;
+      });      
     case SET_REGISTER_FORM_ERROR_MESSAGES:
       return assign({}, state, {
         registerFormErrorMessages: action.messages
-      });
-      break;
+      });      
     case SET_REGISTER_FORM_VALID:
       return assign({}, state, {
         isRegisterFormValid: action.valid
-      });
-      break;    
+      });          
     case SET_REGISTER_ERROR:
       return assign({}, state, {
         registerError: action.message
-      });
+      });      
     default:
       return state;
   }

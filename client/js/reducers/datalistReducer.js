@@ -39,7 +39,7 @@ export default function datalistReducer(state = initialState, action) {
 
       return assign({}, state, {
         currentViewData: newData
-      });
+      });      
     }
     case CLEAR_CUR_VIEW_DATA:
       return assign({}, state, {

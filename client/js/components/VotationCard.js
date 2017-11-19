@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 
+import UserCard from './UserCard.js';
+
 export default class VotationCard extends Component {
   render() {
     const { id, name, desc, votes, createdAt, creatorName, creatorId, creatorAvatar } = this.props;

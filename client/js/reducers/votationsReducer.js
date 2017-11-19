@@ -27,19 +27,19 @@ export default function votationsReducer(state = initialState, action) {
     case CHANGE_SEARCH_VOTATIONS_VALUE:
       return assign({}, state, {
         searchVotationsValue: action.searchVotationsValue
-      });
+      });      
     case CHANGE_FILTER_VOTATIONS_VALUE:
       return assign({}, state, {
         filterVotationsValue: action.filterVotationsValue
-      });
+      });      
     case CHANGE_NV_STATE_TITLE: 
       return assign({}, state, {
         nvTitle: action.title
-      });
+      });      
     case CHANGE_NV_STATE_DESC: 
       return assign({}, state, {
         nvDescription: action.description
-      });   
+      });         
     case SET_NV_PARTICIPANTS:
       return assign({}, state, {
         nvParticipants: action.participants
